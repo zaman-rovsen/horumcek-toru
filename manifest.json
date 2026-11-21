@@ -1,0 +1,12 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Hörümçək Toru",
+  "orientation": "any",
+  "scope": "/horumcek-toru/",
+  "short_name": "Hörümçək",
+  "start_url": "/horumcek-toru/",
+  "theme_color": "#ffffff",
+  "description": "Dairəvi tor və 4 suallıq kviz oyunu"
+}
