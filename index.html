@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hörümçək Toru</title>
+  <style>
+    * { box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
+    body {
+      margin: 0;
+      padding: 14px;
+      background: #0b1020;
+      color: #f1f5f9;
+    }
+    .container {
+      max-width: 740px;
+      margin: 0 auto;
+      background: #131c31;
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid #24324d;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { font-size: 20px; margin-bottom: 2px; }
+    input, button, select {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 13px;
+      margin: 4px 4px 4px 0;
+    }
+    input, select {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #334155;
+    }
+    button {
+      background: #0ea5e9;
+      color: #041019;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button:hover:not(:disabled) { background: #38bdf8; }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    button.secondary {
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+    }
+    button.rules-btn {
+      background: #0f172a;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+      margin: 0;
+      padding: 6px 12px;
+    }
+    .card {
+      background: #0d1424;
+      padding: 12px 14px;
+      border-radius: 12px;
+      margin-top: 10px;
+      border: 1px solid #1f2d46;
+    }
+    .hidden { display: none !important; }
+    .status {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: #0f203b;
+      border: 1px solid #1d4ed8;
+      color: #bfdbfe;
+      font-size: 12px;
+    }
+    .web-box {
+      position: relative;
+      width: 100%;
+      max-width: 310px;
+      aspect-ratio: 1 / 1;
+      margin: 8px auto 0;
+      background: radial-gradient(circle at center, #162642 0%, #070c18 85%);
+      border: 1px solid #22324d;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+    svg.web-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .web-node {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      z-index: 2;
+      white-space: nowrap;
+      font-size: 11.5px;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.95);
+    }
+    .web-node.eliminated {
+      opacity: 0.35;
+      text-decoration: line-through;
+    }
+    .web-node.turn-active .node-name {
+      color: #fde047;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .player-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 7px currentColor;
+    }
+    .node-name { font-weight: 700; color: #f8fafc; }
+    .node-hearts { font-size: 10px; letter-spacing: 0.3px; }
+    .duel-banner {
+      margin-top: 10px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      background: #142038;
+      border: 1px solid #2563eb;
+      font-weight: 700;
+      font-size: 12.5px;
+      color: #e0e7ff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .secret-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      background: #101b30;
+      border: 1px dashed #38bdf8;
+    }
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(170px, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+    @media (max-width: 560px) {
+      .options-grid { grid-template-columns: 1fr; }
+    }
+    .option-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+      text-align: left;
+      background: #131c31;
+      color: #f8fafc;
+      border: 2px solid #334155;
+      margin: 0;
+      padding: 9px 11px;
+    }
+    .option-btn.correct-option { border-color: #22c55e; }
+    .pick-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+    .pick-chip {
+      font-size: 10.5px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      color: #070b14;
+      font-weight: 700;
+    }
+    .correct-chip { background: #22c55e; color: #052e16; }
+    .standings-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    .standings-table th, .standings-table td {
+      padding: 7px 9px;
+      border-bottom: 1px solid #1f2d46;
+      text-align: left;
+    }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      z-index: 100;
+    }
+    .modal-card {
+      max-width: 500px;
+      width: 100%;
+      background: #131c31;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .rule-item {
+      background: #0d1424;
+      border: 1px solid #1f2d46;
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    .author-signature {
+      position: fixed;
+      right: 12px;
+      bottom: 8px;
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.7);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-bar">
+      <div>
+        <h1>🕸️ Hörümçək Toru</h1>
+        <p style="margin-bottom:0; color:#94a3b8; font-size:12px;">Dairəvi tor • Gizli çağırış • 4 suallıq kviz • Reytinq</p>
+      </div>
+      <button id="openRulesBtn" class="rules-btn" type="button">📖 Qaydalar</button>
+    </div>
+
+    <div id="authSection" class="card">
+      <h3>Hesaba giriş / Qeydiyyat</h3>
+      <input type="email" id="emailInput" placeholder="E-poçt" />
+      <input type="password" id="passwordInput" placeholder="Şifrə (min. 6 simvol)" />
+      <div>
+        <button id="loginBtn" type="button">Daxil ol</button>
+        <button id="registerBtn" class="secondary" type="button">Qeydiyyat</button>
+      </div>
+    </div>
+
+    <div id="lobbySection" class="card hidden">
+      <h3>Xoş gəldin, <span id="userEmailLabel"></span></h3>
+      <p style="color:#cbd5e1; margin-bottom:8px;">Reytinq balın: <strong id="userScoreLabel">0</strong></p>
+      <div>
+        <input type="text" id="roomCodeInput" placeholder="Otaq kodu (məs: 101)" />
+        <button id="createRoomBtn" type="button">Otaq yarat</button>
+        <button id="joinRoomBtn" class="secondary" type="button">Otağa qoşul</button>
+        <button id="logoutBtn" class="secondary" type="button">Çıxış</button>
+      </div>
+    </div>
+
+    <div id="roomSection" class="card hidden">
+      <div class="top-bar">
+        <div>
+          <h3 style="margin-bottom:2px;">Otaq: <span id="activeRoomCode"></span></h3>
+          <div id="roomMetaText" style="font-size:12px; color:#cbd5e1;"></div>
+        </div>
+        <div>
+          <button id="addTestBotBtn" class="secondary" type="button">+ Test Bot</button>
+          <button id="startNowBtn" class="hidden" type="button">İndi başlat</button>
+          <button id="leaveRoomBtn" class="secondary" type="button">Otaqdan çıx</button>
+        </div>
+      </div>
+
+      <div id="webPhaseSection" class="card">
+        <div class="web-box" id="webBox">
+          <svg class="web-svg" id="webSvg" viewBox="0 0 310 310"></svg>
+          <div id="webNodes"></div>
+        </div>
+
+        <div class="duel-banner" id="duelBanner">
+          <span id="duelBannerText">Oyunçuların otağa qoşulması gözlənilir...</span>
+          <span id="roundInfoBadge" style="font-size:12px; color:#93c5fd;"></span>
+        </div>
+
+        <div id="secretChallengeBox" class="secret-box hidden">
+          <span id="challengePromptText" style="font-size:12px; font-weight:700;">Gizli duel seçimi:</span>
+          <select id="targetSelect"></select>
+          <button id="saveTargetBtn" type="button">Seçimi təsdiqlə</button>
+          <span id="currentPickStatus" style="font-size:12px; color:#94a3b8;"></span>
+        </div>
+      </div>
+
+      <div id="duelPhaseSection" class="card hidden">
+        <div class="top-bar">
+          <h3 id="duelTitle" style="margin-bottom:4px; font-size:15px;">4 Suallıq Kviz Dueli</h3>
+          <span id="duelProgressText" style="font-size:12px; color:#38bdf8; font-weight:700;"></span>
+        </div>
+        <p id="questionText" style="font-size:14.5px; font-weight:600; margin-bottom:8px;"></p>
+        <div id="answersBox" class="options-grid"></div>
+        <div id="duelSummaryBox" style="margin-top:8px; font-size:12px; color:#cbd5e1;"></div>
+      </div>
+
+      <div id="finalStandingsCard" class="card hidden">
+        <h3>🏆 Yarış Yekunlaşdı — Reytinq Balları</h3>
+        <div id="standingsContainer"></div>
+      </div>
+    </div>
+
+    <div id="statusBox" class="status">Hazırdır.</div>
+  </div>
+
+  <div id="rulesModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="rulesTitle" style="margin:0;">📖 Yarış Qaydaları</h3>
+        <button id="closeRulesBtn" class="secondary" style="margin:0; padding:5px 10px;" type="button">×</button>
+      </div>
+      <div class="rule-item">
+        <strong>1. Oyunçu sayı, can və dolma vaxtı:</strong> Otaqda 3–5 oyunçu olur, hər birinin <strong>3 canı</strong> var. Dolma vaxtı (35 san.) bitdikdə ən azı 3 oyunçu varsa, oyun avtomatik başlayır.
+      </div>
+      <div class="rule-item">
+        <strong>2. Gizli çağırış və dairəvi tor:</strong> Hər kəs rəqibini gizli seçir. Növbəsi çatanda seçim açılır, tor üzərində duel xətti çəkilir və altda <em>"A oyunçusu B-ni duelə dəvət etdi"</em> görünür. Dövrələr arası seçimi dəyişmək olar, bir nəfəri hamı çağıra bilər. Seçdiyin rəqibin canı səndən əvvəl bitsə, <strong>açıq şəkildə</strong> başqasını seçə bilirsən.
+      </div>
+      <div class="rule-item">
+        <strong>3. 4 suallıq kviz və canlı rənglər:</strong> Duel 4 test sualından ibarətdir. İzləyən oyunçular hər duelçinin öz rəngi və adı ilə seçdiyi cavabı, ayrıca bir rənglə isə <strong>düzgün cavabı</strong> görür. Canı bitən oyundan çıxır.
+      </div>
+      <div class="rule-item">
+        <strong>4. Reytinq balları:</strong> Sonda 5 nəfərlik oyunda <strong>+3, +2, +1, 0, -1</strong>; 3 nəfərlik oyunda <strong>+3, +1, -1</strong> bal verilir.
+      </div>
+      <div style="text-align:right;">
+        <button id="okRulesBtn" type="button">Aydındır</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="author-signature">by Rovshan Zaman</div>
+
+  <script>
+    window.addEventListener("error", function (e) {
+      var box = document.getElementById("statusBox");
+      if (box) box.textContent = "Xəta: " + e.message;
+    });
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      updateDoc,
+      onSnapshot
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDG4GG4ViHmdMhcBBud5HqLKPOqz4TLz0k",
+      authDomain: "horumcek-toru.firebaseapp.com",
+      projectId: "horumcek-toru",
+      storageBucket: "horumcek-toru.firebasestorage.app",
+      messagingSenderId: "64931025064",
+      appId: "1:64931025064:web:8af35447adea36a046f29d"
+    };
+
+    const PLAYER_COLORS = ["#38bdf8", "#f472b6", "#facc15", "#c084fc", "#fb923c"];
+    const FILL_DURATION_MS = 35000;
+
+    const QUESTION_BANK = [
+      { q: "Azərbaycanın paytaxtı hansı şəhərdir?", options: ["Gəncə", "Bakı", "Şuşa", "Sumqayıt"], correctIndex: 1 },
+      { q: "HTML-də əsas mətn paraqrafı hansı teqlə yazılır?", options: ["<div>", "<p>", "<span>", "<h1>"], correctIndex: 1 },
+      { q: "Bir bayt neçə bitdən ibarətdir?", options: ["4", "8", "16", "32"], correctIndex: 1 },
+      { q: "Xəzər dənizi coğrafi baxımdan nə sayılır?", options: ["Açıq okean", "Qapalı su hövzəsi (göl)", "Boğaz", "Körfəz"], correctIndex: 1 },
+      { q: "Python-da siyahıya (list) yeni element əlavə edən metod hansıdır?", options: ["push()", "add()", "append()", "insertItem()"], correctIndex: 2 },
+      { q: "Dünyanın ən böyük okeanı hansıdır?", options: ["Atlantik", "Hind", "Sakit okean", "Şimal Buzlu"], correctIndex: 2 },
+      { q: "CSS-də mətn rəngini təyin edən xüsusiyyət hansıdır?", options: ["font-style", "text-align", "color", "background"], correctIndex: 2 },
+      { q: "İnformatikada ikilik say sisteminin əsası neçədir?", options: ["2", "8", "10", "16"], correctIndex: 0 }
+    ];
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const statusBox = document.getElementById("statusBox");
+    const authSection = document.getElementById("authSection");
+    const lobbySection = document.getElementById("lobbySection");
+    const roomSection = document.getElementById("roomSection");
+    const webPhaseSection = document.getElementById("webPhaseSection");
+    const duelPhaseSection = document.getElementById("duelPhaseSection");
+    const finalStandingsCard = document.getElementById("finalStandingsCard");
+
+    const userEmailLabel = document.getElementById("userEmailLabel");
+    const userScoreLabel = document.getElementById("userScoreLabel");
+    const roomCodeInput = document.getElementById("roomCodeInput");
+    const activeRoomCode = document.getElementById("activeRoomCode");
+    const roomMetaText = document.getElementById("roomMetaText");
+    const addTestBotBtn = document.getElementById("addTestBotBtn");
+    const startNowBtn = document.getElementById("startNowBtn");
+    const webSvg = document.getElementById("webSvg");
+    const webNodes = document.getElementById("webNodes");
+    const duelBannerText = document.getElementById("duelBannerText");
+    const roundInfoBadge = document.getElementById("roundInfoBadge");
+    const secretChallengeBox = document.getElementById("secretChallengeBox");
+    const challengePromptText = document.getElementById("challengePromptText");
+    const targetSelect = document.getElementById("targetSelect");
+    const saveTargetBtn = document.getElementById("saveTargetBtn");
+    const currentPickStatus = document.getElementById("currentPickStatus");
+    const duelTitle = document.getElementById("duelTitle");
+    const duelProgressText = document.getElementById("duelProgressText");
+    const questionText = document.getElementById("questionText");
+    const answersBox = document.getElementById("answersBox");
+    const duelSummaryBox = document.getElementById("duelSummaryBox");
+    const standingsContainer = document.getElementById("standingsContainer");
+
+    const rulesModal = document.getElementById("rulesModal");
+    document.getElementById("openRulesBtn").addEventListener("click", () => rulesModal.classList.remove("hidden"));
+    document.getElementById("closeRulesBtn").addEventListener("click", () => rulesModal.classList.add("hidden"));
+    document.getElementById("okRulesBtn").addEventListener("click", () => rulesModal.classList.add("hidden"));
+    rulesModal.addEventListener("click", (e) => {
+      if (e.target === rulesModal) rulesModal.classList.add("hidden");
+    });
+
+    let currentUser = null;
+    let currentRoomId = null;
+    let unsubscribeRoom = null;
+    let latestRoom = null;
+    let timerInterval = null;
+    let ratingAppliedForRoom = false;
+    let botActionTimeout = null;
+
+    function isBotUid(uid) {
+      return typeof uid === "string" && uid.startsWith("test_bot_");
+    }
+
+    function setStatus(msg) {
+      statusBox.textContent = msg;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    function shortName(emailOrName) {
+      if (!emailOrName) return "Oyunçu";
+      return String(emailOrName).split("@")[0];
+    }
+
+    function renderHearts(lives) {
+      const safeLives = Math.max(0, Math.min(3, lives ?? 3));
+      return `<span class="node-hearts">${"❤️".repeat(safeLives)}${"🖤".repeat(3 - safeLives)}</span>`;
+    }
+
+    function pickFourQuestions() {
+      const copy = [...QUESTION_BANK];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy.slice(0, 4);
+    }
+
+    function getRatingDistribution(playerCount) {
+      if (playerCount >= 5) return [3, 2, 1, 0, -1];
+      if (playerCount === 4) return [3, 1, 0, -1];
+      return [3, 1, -1];
+    }
+
+    function getCirclePoint(index, total, radius) {
+      const cx = 155;
+      const cy = 155;
+      const angle = -Math.PI / 2 + (2 * Math.PI * index) / Math.max(total, 1);
+      return {
+        x: cx + radius * Math.cos(angle),
+        y: cy + radius * Math.sin(angle)
+      };
+    }
+
+    function renderSpiderWeb(room) {
+      const players = room.players || [];
+      const count = players.length;
+      const cx = 155;
+      const cy = 155;
+      const outerRadius = 102;
+      let svg = "";
+
+      [30, 56, 80, outerRadius].forEach((r, i) => {
+        svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(148,163,184,${i === 3 ? "0.35" : "0.18"})" stroke-width="${i === 3 ? "1.5" : "1"}" />`;
+      });
+
+      const spokes = Math.max(count, 6);
+      for (let i = 0; i < spokes; i++) {
+        const angle = -Math.PI / 2 + (2 * Math.PI * i) / spokes;
+        const x2 = cx + outerRadius * Math.cos(angle);
+        const y2 = cy + outerRadius * Math.sin(angle);
+        svg += `<line x1="${cx}" y1="${cy}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="rgba(148,163,184,0.16)" stroke-width="1" />`;
+      }
+
+      const revealedEdges = room.revealedEdges || [];
+      revealedEdges.forEach((edge, idx) => {
+        const fromIdx = players.findIndex((p) => p.uid === edge.fromUid);
+        const toIdx = players.findIndex((p) => p.uid === edge.toUid);
+        if (fromIdx !== -1 && toIdx !== -1) {
+          const p1 = getCirclePoint(fromIdx, count, outerRadius);
+          const p2 = getCirclePoint(toIdx, count, outerRadius);
+          const color = players[fromIdx]?.color || "#38bdf8";
+          const isCurrent = idx === revealedEdges.length - 1;
+          svg += `
+            <line x1="${p1.x.toFixed(1)}" y1="${p1.y.toFixed(1)}" x2="${p2.x.toFixed(1)}" y2="${p2.y.toFixed(1)}"
+              stroke="${color}" stroke-width="${isCurrent ? 3 : 1.8}"
+              stroke-dasharray="${isCurrent ? "" : "5,4"}" opacity="${isCurrent ? 0.95 : 0.55}" />
+          `;
+        }
+      });
+
+      webSvg.innerHTML = svg;
+
+      const activeTurnUid = room.activeDuel?.challengerUid || players[room.turnIndex]?.uid || null;
+      webNodes.innerHTML = players
+        .map((p, idx) => {
+          const pt = getCirclePoint(idx, count, outerRadius);
+          const leftPct = (pt.x / 310) * 100;
+          const topPct = (pt.y / 310) * 100;
+          const isElim = (p.lives ?? 3) <= 0;
+          const isTurn = p.uid === activeTurnUid && room.status === "playing";
+          return `
+            <div class="web-node ${isElim ? "eliminated" : ""} ${isTurn ? "turn-active" : ""}"
+                 style="left:${leftPct.toFixed(1)}%; top:${topPct.toFixed(1)}%;">
+              <span class="player-dot" style="background:${p.color}; color:${p.color};"></span>
+              <span class="node-name">${escapeHtml(shortName(p.email))}</span>
+              ${renderHearts(p.lives ?? 3)}
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      if (user) {
+        authSection.classList.add("hidden");
+        lobbySection.classList.remove("hidden");
+        roomSection.classList.add("hidden");
+        userEmailLabel.textContent = user.email;
+
+        const userRef = doc(db, "users", user.uid);
+        const snap = await getDoc(userRef);
+        if (!snap.exists()) {
+          await setDoc(userRef, { email: user.email, score: 0 });
+          userScoreLabel.textContent = "0";
+        } else {
+          userScoreLabel.textContent = snap.data().score ?? 0;
+        }
+        setStatus("Daxil oldunuz: " + user.email);
+      } else {
+        authSection.classList.remove("hidden");
+        lobbySection.classList.add("hidden");
+        roomSection.classList.add("hidden");
+        setStatus("Zəhmət olmasa daxil olun və ya qeydiyyatdan keçin.");
+      }
+    });
+
+    document.getElementById("loginBtn").addEventListener("click", async () => {
+      const email = document.getElementById("emailInput").value.trim();
+      const password = document.getElementById("passwordInput").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        setStatus("Giriş xətası: " + err.message);
+      }
+    });
+
+    document.getElementById("registerBtn").addEventListener("click", async () => {
+      const email = document.getElementById("emailInput").value.trim();
+      const password = document.getElementById("passwordInput").value;
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        setStatus("Qeydiyyat xətası: " + err.message);
+      }
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await signOut(auth);
+    });
+
+    function makePlayerRecord(user, index) {
+      return {
+        uid: user.uid,
+        email: user.email,
+        color: PLAYER_COLORS[index % PLAYER_COLORS.length],
+        lives: 3,
+        wins: 0,
+        eliminatedOrder: null
+      };
+    }
+
+    addTestBotBtn.addEventListener("click", async () => {
+      if (!currentRoomId || !latestRoom) return;
+      if (latestRoom.status !== "waiting") {
+        setStatus("Bot yalnız otaq gözləmə mərhələsində əlavə edilə bilər.");
+        return;
+      }
+      const players = [...(latestRoom.players || [])];
+      if (players.length >= 5) {
+        setStatus("Otaqda artıq maksimum 5 oyunçu var.");
+        return;
+      }
+      const botIndex = players.filter((p) => isBotUid(p.uid)).length + 1;
+      const botPlayer = {
+        uid: `test_bot_${botIndex}_${Date.now()}`,
+        email: `Bot_${botIndex}@test.local`,
+        color: PLAYER_COLORS[players.length % PLAYER_COLORS.length],
+        lives: 3,
+        wins: 0,
+        eliminatedOrder: null
+      };
+      players.push(botPlayer);
+      await updateDoc(doc(db, "rooms", currentRoomId), { players });
+      setStatus(`Test bot əlavə edildi: ${botPlayer.email}`);
+    });
+
+    document.getElementById("createRoomBtn").addEventListener("click", async () => {
+      const code = roomCodeInput.value.trim();
+      if (!code || !currentUser) return;
+      ratingAppliedForRoom = false;
+      const roomRef = doc(db, "rooms", code);
+      await setDoc(roomRef, {
+        code,
+        hostId: currentUser.uid,
+        status: "waiting",
+        createdAt: Date.now(),
+        fillDurationMs: FILL_DURATION_MS,
+        players: [makePlayerRecord(currentUser, 0)],
+        secretTargets: {},
+        revealedEdges: [],
+        roundNumber: 1,
+        turnIndex: 0,
+        activeDuel: null,
+        finalStandings: null
+      });
+      enterRoom(code);
+    });
+
+    document.getElementById("joinRoomBtn").addEventListener("click", async () => {
+      const code = roomCodeInput.value.trim();
+      if (!code || !currentUser) return;
+      const roomRef = doc(db, "rooms", code);
+      const snap = await getDoc(roomRef);
+      if (!snap.exists()) {
+        setStatus("Bu kodla otaq tapılmadı.");
+        return;
+      }
+      const data = snap.data();
+      const players = data.players || [];
+      if (data.status !== "waiting") {
+        setStatus("Bu otaqda yarış artıq başlayıb və ya bitib.");
+        return;
+      }
+      if (players.length >= 5 && !players.some((p) => p.uid === currentUser.uid)) {
+        setStatus("Otaq doludur (maksimum 5 oyunçu).");
+        return;
+      }
+      if (!players.some((p) => p.uid === currentUser.uid)) {
+        players.push(makePlayerRecord(currentUser, players.length));
+        await updateDoc(roomRef, { players });
+      }
+      ratingAppliedForRoom = false;
+      enterRoom(code);
+    });
+
+    startNowBtn.addEventListener("click", async () => {
+      if (!currentRoomId || !latestRoom) return;
+      if ((latestRoom.players || []).length < 3) {
+        setStatus("Başlamaq üçün ən azı 3 oyunçu lazımdır.");
+        return;
+      }
+      await startGameInRoom(currentRoomId, latestRoom);
+    });
+
+    async function startGameInRoom(code, room) {
+      const players = room.players || [];
+      if (players.length < 3 || room.status !== "waiting") return;
+      const roomRef = doc(db, "rooms", code);
+      await updateDoc(roomRef, {
+        status: "playing",
+        roundNumber: 1,
+        turnIndex: 0,
+        revealedEdges: [],
+        activeDuel: null,
+        finalStandings: null
+      });
+    }
+
+    function enterRoom(code) {
+      currentRoomId = code;
+      lobbySection.classList.add("hidden");
+      roomSection.classList.remove("hidden");
+      activeRoomCode.textContent = code;
+
+      if (unsubscribeRoom) unsubscribeRoom();
+      if (timerInterval) clearInterval(timerInterval);
+
+      const roomRef = doc(db, "rooms", code);
+      unsubscribeRoom = onSnapshot(roomRef, async (snap) => {
+        if (!snap.exists()) return;
+        const room = snap.data();
+        latestRoom = room;
+        await handleRoomSnapshot(code, room);
+      });
+
+      timerInterval = setInterval(async () => {
+        if (!latestRoom || latestRoom.status !== "waiting" || !currentRoomId) return;
+        const players = latestRoom.players || [];
+        const elapsed = Date.now() - (latestRoom.createdAt || Date.now());
+        const remainingSec = Math.max(0, Math.ceil(((latestRoom.fillDurationMs || FILL_DURATION_MS) - elapsed) / 1000));
+
+        if (players.length >= 5) {
+          await startGameInRoom(currentRoomId, latestRoom);
+          return;
+        }
+        if (players.length >= 3 && remainingSec <= 0) {
+          await startGameInRoom(currentRoomId, latestRoom);
+          return;
+        }
+        updateWaitingMeta(latestRoom, remainingSec);
+      }, 1000);
+    }
+
+    function updateWaitingMeta(room, remainingSec) {
+      const players = room.players || [];
+      addTestBotBtn.classList.toggle("hidden", room.status !== "waiting" || players.length >= 5);
+      if (players.length >= 3) {
+        roomMetaText.textContent = `Oyunçu: ${players.length}/5 • Dolma taymeri: ${remainingSec} san.`;
+        startNowBtn.classList.toggle("hidden", room.hostId !== currentUser?.uid);
+      } else {
+        roomMetaText.textContent = `Oyunçu: ${players.length}/5 • Ən azı 3 oyunçu gözlənilir...`;
+        startNowBtn.classList.add("hidden");
+      }
+    }
+
+    async function handleRoomSnapshot(code, room) {
+      const players = room.players || [];
+      renderSpiderWeb(room);
+
+      if (room.status === "waiting") {
+        webPhaseSection.classList.remove("hidden");
+        duelPhaseSection.classList.add("hidden");
+        finalStandingsCard.classList.add("hidden");
+        secretChallengeBox.classList.add("hidden");
+
+        const elapsed = Date.now() - (room.createdAt || Date.now());
+        const remainingSec = Math.max(0, Math.ceil(((room.fillDurationMs || FILL_DURATION_MS) - elapsed) / 1000));
+        updateWaitingMeta(room, remainingSec);
+        duelBannerText.textContent = "Otaq dolur — dairəvi tor hazırlaşır.";
+        roundInfoBadge.textContent = "3–5 oyunçu";
+
+        if (players.length >= 5) {
+          await startGameInRoom(code, room);
+        }
+        return;
+      }
+
+      addTestBotBtn.classList.add("hidden");
+      startNowBtn.classList.add("hidden");
+      roomMetaText.textContent = `Canlı oyunçu: ${players.filter((p) => (p.lives ?? 3) > 0).length} / ${players.length} • Dövrə: ${room.roundNumber || 1}`;
+      roundInfoBadge.textContent = `Dövrə ${room.roundNumber || 1}`;
+
+      if (room.status === "finished" && room.finalStandings) {
+        webPhaseSection.classList.add("hidden");
+        duelPhaseSection.classList.add("hidden");
+        finalStandingsCard.classList.remove("hidden");
+        renderFinalStandings(room.finalStandings);
+        if (!ratingAppliedForRoom && currentUser) {
+          ratingAppliedForRoom = true;
+          const myEntry = room.finalStandings.find((s) => s.uid === currentUser.uid);
+          if (myEntry) {
+            await applyRatingToUser(myEntry.ratingDelta);
+          }
+        }
+        return;
+      }
+
+      finalStandingsCard.classList.add("hidden");
+
+      const activeDuel = room.activeDuel;
+      if (activeDuel) {
+        webPhaseSection.classList.add("hidden");
+        duelPhaseSection.classList.remove("hidden");
+        secretChallengeBox.classList.add("hidden");
+
+        const challenger = players.find((p) => p.uid === activeDuel.challengerUid);
+        const opponent = players.find((p) => p.uid === activeDuel.opponentUid);
+        duelBannerText.textContent = `${shortName(challenger?.email)} ${shortName(opponent?.email)}-ni duelə dəvət etdi!`;
+        renderActiveDuel(code, room, activeDuel, challenger, opponent);
+        return;
+      }
+
+      webPhaseSection.classList.remove("hidden");
+      duelPhaseSection.classList.add("hidden");
+
+      const me = players.find((p) => p.uid === currentUser?.uid);
+      const secretTargets = room.secretTargets || {};
+      const mySavedTargetUid = secretTargets[currentUser?.uid] || "";
+      const savedTargetPlayer = players.find((p) => p.uid === mySavedTargetUid);
+      const mustOpenRechallenge = Boolean(savedTargetPlayer && (savedTargetPlayer.lives ?? 3) <= 0);
+      const currentTurnPlayer = players[room.turnIndex % Math.max(players.length, 1)];
+      const isMyTurnToReveal = currentTurnPlayer?.uid === currentUser?.uid && (me?.lives ?? 3) > 0;
+
+      if (me && (me.lives ?? 3) > 0) {
+        secretChallengeBox.classList.remove("hidden");
+        const candidates = players.filter((p) => p.uid !== currentUser.uid && (p.lives ?? 3) > 0);
+        targetSelect.innerHTML = candidates
+          .map((c) => `<option value="${escapeHtml(c.uid)}" ${c.uid === mySavedTargetUid ? "selected" : ""}>${escapeHtml(shortName(c.email))} (${c.lives} can)</option>`)
+          .join("");
+
+        if (mustOpenRechallenge) {
+          challengePromptText.textContent = "Seçdiyin rəqibin canı bitib! Açıq şəkildə yeni rəqib seç və təsdiqlə:";
+          currentPickStatus.textContent = "Açıq çağırış tələb olunur";
+        } else if (isMyTurnToReveal) {
+          challengePromptText.textContent = "Sənin növbəndir! Rəqibini seçib təsdiqlə ki, duel açılsın:";
+          currentPickStatus.textContent = mySavedTargetUid ? `Seçim: ${shortName(savedTargetPlayer?.email)}` : "Hələ seçilməyib";
+        } else {
+          challengePromptText.textContent = "Gizli duel seçimi:";
+          currentPickStatus.textContent = mySavedTargetUid ? "Gizli seçim qeyd olundu ✓" : "Hələ seçilməyib";
+        }
+      } else {
+        secretChallengeBox.classList.add("hidden");
+      }
+
+      await checkTurnOrBotChoices(code, room);
+    }
+
+    async function checkTurnOrBotChoices(code, room) {
+      const players = room.players || [];
+      const alivePlayers = players.filter((p) => (p.lives ?? 3) > 0);
+      if (alivePlayers.length <= 1) {
+        await finishGame(code, room);
+        return;
+      }
+
+      const secretTargets = { ...(room.secretTargets || {}) };
+      let idx = room.turnIndex || 0;
+      let roundNum = room.roundNumber || 1;
+      let checked = 0;
+      let activeCandidate = null;
+      let activeRound = roundNum;
+      let activeIdx = idx;
+
+      while (checked < players.length) {
+        const candidate = players[idx % players.length];
+        if ((candidate.lives ?? 3) > 0) {
+          activeCandidate = candidate;
+          activeRound = roundNum;
+          activeIdx = idx;
+          break;
+        }
+        idx = (idx + 1) % players.length;
+        if (idx === 0) roundNum += 1;
+        checked += 1;
+      }
+
+      if (!activeCandidate) return;
+
+      const candidateTargetUid = secretTargets[activeCandidate.uid];
+      const candidateTarget = players.find((p) => p.uid === candidateTargetUid);
+      const hasValidConfirmedTarget = Boolean(
+        candidateTarget && (candidateTarget.lives ?? 3) > 0 && candidateTarget.uid !== activeCandidate.uid
+      );
+
+      if (!hasValidConfirmedTarget) {
+        if (isBotUid(activeCandidate.uid) && room.hostId === currentUser?.uid && !botActionTimeout) {
+          const botTargets = alivePlayers.filter((p) => p.uid !== activeCandidate.uid);
+          if (botTargets.length > 0) {
+            botActionTimeout = setTimeout(async () => {
+              botActionTimeout = null;
+              const snap = await getDoc(doc(db, "rooms", code));
+              if (!snap.exists()) return;
+              const latest = snap.data();
+              if (latest.status !== "playing" || latest.activeDuel) return;
+              const chosen = botTargets[Math.floor(Math.random() * botTargets.length)];
+              await updateDoc(doc(db, "rooms", code), {
+                secretTargets: {
+                  ...(latest.secretTargets || {}),
+                  [activeCandidate.uid]: chosen.uid
+                }
+              });
+            }, 650);
+          }
+        } else {
+          duelBannerText.textContent = `${shortName(activeCandidate.email)} rəqib seçir...`;
+        }
+        return;
+      }
+
+      if (room.hostId !== currentUser?.uid) return;
+
+      delete secretTargets[activeCandidate.uid];
+      const nextTurnIndex = (activeIdx + 1) % players.length;
+      const nextRound = nextTurnIndex === 0 ? activeRound + 1 : activeRound;
+
+      const newEdge = {
+        fromUid: activeCandidate.uid,
+        toUid: candidateTarget.uid,
+        round: activeRound
+      };
+
+      const duelQuestions = pickFourQuestions();
+      await updateDoc(doc(db, "rooms", code), {
+        turnIndex: nextTurnIndex,
+        roundNumber: nextRound,
+        secretTargets,
+        revealedEdges: [...(room.revealedEdges || []), newEdge],
+        activeDuel: {
+          challengerUid: activeCandidate.uid,
+          opponentUid: candidateTarget.uid,
+          questions: duelQuestions,
+          qIndex: 0,
+          answers: {},
+          scores: {
+            [activeCandidate.uid]: 0,
+            [candidateTarget.uid]: 0
+          }
+        }
+      });
+    }
+
+    saveTargetBtn.addEventListener("click", async () => {
+      if (!currentRoomId || !latestRoom || !currentUser) return;
+      const chosenUid = targetSelect.value;
+      if (!chosenUid || chosenUid === currentUser.uid) {
+        setStatus("Zəhmət olmasa rəqib seçin.");
+        return;
+      }
+
+      const updatedSecrets = {
+        ...(latestRoom.secretTargets || {}),
+        [currentUser.uid]: chosenUid
+      };
+
+      await updateDoc(doc(db, "rooms", currentRoomId), {
+        secretTargets: updatedSecrets
+      });
+      setStatus("Rəqib seçiminiz təsdiqləndi.");
+    });
+
+    function renderActiveDuel(code, room, duel, challenger, opponent) {
+      const qList = duel.questions || [];
+      const qIdx = duel.qIndex ?? 0;
+      const currentQ = qList[qIdx];
+
+      duelTitle.textContent = `4 Suallıq Kviz Dueli: ${shortName(challenger?.email)} vs ${shortName(opponent?.email)}`;
+      duelProgressText.textContent = `Sual ${Math.min(qIdx + 1, 4)} / 4`;
+
+      if (!currentQ) return;
+      questionText.textContent = currentQ.q;
+
+      const qAnswers = (duel.answers && duel.answers[qIdx]) || {};
+      const isParticipant = currentUser?.uid === duel.challengerUid || currentUser?.uid === duel.opponentUid;
+      const isSpectator = !isParticipant;
+      const alreadyAnsweredThisQ = Boolean(qAnswers[currentUser?.uid] !== undefined);
+      const bothAnswered = qAnswers[duel.challengerUid] !== undefined && qAnswers[duel.opponentUid] !== undefined;
+
+      answersBox.innerHTML = "";
+      currentQ.options.forEach((opt, optIdx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "option-btn";
+        if (bothAnswered && optIdx === currentQ.correctIndex) {
+          btn.classList.add("correct-option");
+        }
+
+        const optLabel = document.createElement("div");
+        optLabel.textContent = opt;
+        btn.appendChild(optLabel);
+
+        const tagsWrap = document.createElement("div");
+        tagsWrap.className = "pick-tags";
+
+        [challenger, opponent].forEach((duelist) => {
+          if (!duelist) return;
+          const pickedIdx = qAnswers[duelist.uid];
+          if (pickedIdx === optIdx) {
+            const canSeeThisPick = isSpectator || bothAnswered || duelist.uid === currentUser?.uid;
+            if (canSeeThisPick) {
+              const chip = document.createElement("span");
+              chip.className = "pick-chip";
+              chip.style.background = duelist.color;
+              chip.textContent = shortName(duelist.email);
+              tagsWrap.appendChild(chip);
+            }
+          }
+        });
+
+        if (bothAnswered && optIdx === currentQ.correctIndex) {
+          const corrChip = document.createElement("span");
+          corrChip.className = "pick-chip correct-chip";
+          corrChip.textContent = "✓ Doğru cavab";
+          tagsWrap.appendChild(corrChip);
+        }
+
+        btn.appendChild(tagsWrap);
+        btn.disabled = !isParticipant || alreadyAnsweredThisQ || bothAnswered;
+        btn.addEventListener("click", () => submitDuelAnswer(code, qIdx, optIdx));
+        answersBox.appendChild(btn);
+      });
+
+      const cScore = duel.scores?.[duel.challengerUid] ?? 0;
+      const oScore = duel.scores?.[duel.opponentUid] ?? 0;
+      if (isSpectator || bothAnswered) {
+        duelSummaryBox.textContent = `Duel hesabı — ${shortName(challenger?.email)}: ${cScore} doğru | ${shortName(opponent?.email)}: ${oScore} doğru`;
+      } else {
+        const myScore = duel.scores?.[currentUser?.uid] ?? 0;
+        duelSummaryBox.textContent = `Sənin doğru cavabların: ${myScore} • Rəqibin seçimi cavab bitəndə görünəcək`;
+      }
+
+      if (room.hostId === currentUser?.uid && !bothAnswered) {
+        const botParticipants = [duel.challengerUid, duel.opponentUid].filter(
+          (uid) => isBotUid(uid) && qAnswers[uid] === undefined
+        );
+        if (botParticipants.length > 0 && !botActionTimeout) {
+          botActionTimeout = setTimeout(async () => {
+            botActionTimeout = null;
+            for (const botUid of botParticipants) {
+              const pick = Math.random() < 0.65
+                ? currentQ.correctIndex
+                : Math.floor(Math.random() * currentQ.options.length);
+              await applyAnswerForUid(code, botUid, qIdx, pick);
+            }
+          }, 700);
+        }
+      }
+
+      if (bothAnswered && room.hostId === currentUser?.uid) {
+        setTimeout(() => {
+          advanceDuelState(code);
+        }, 1200);
+      }
+    }
+
+    async function applyAnswerForUid(code, uid, qIdx, optIdx) {
+      const snap = await getDoc(doc(db, "rooms", code));
+      if (!snap.exists()) return;
+      const latest = snap.data();
+      const duel = latest.activeDuel;
+      if (!duel) return;
+      const currentQ = duel.questions[qIdx];
+      if (!currentQ) return;
+
+      const prevAnswersForQ = (duel.answers && duel.answers[qIdx]) || {};
+      if (prevAnswersForQ[uid] !== undefined) return;
+
+      const isCorrect = optIdx === currentQ.correctIndex;
+      const updatedAnswers = {
+        ...(duel.answers || {}),
+        [qIdx]: {
+          ...prevAnswersForQ,
+          [uid]: optIdx
+        }
+      };
+
+      const updatedScores = {
+        ...(duel.scores || {}),
+        [uid]: (duel.scores?.[uid] ?? 0) + (isCorrect ? 1 : 0)
+      };
+
+      await updateDoc(doc(db, "rooms", code), {
+        activeDuel: {
+          ...duel,
+          answers: updatedAnswers,
+          scores: updatedScores
+        }
+      });
+    }
+
+    async function submitDuelAnswer(code, qIdx, optIdx) {
+      if (!currentUser) return;
+      await applyAnswerForUid(code, currentUser.uid, qIdx, optIdx);
+    }
+
+    async function advanceDuelState(code) {
+      const snap = await getDoc(doc(db, "rooms", code));
+      if (!snap.exists()) return;
+      const latest = snap.data();
+      const duel = latest.activeDuel;
+      if (!duel) return;
+
+      const qIdx = duel.qIndex ?? 0;
+      const qAnswers = (duel.answers && duel.answers[qIdx]) || {};
+      const bothAnswered = qAnswers[duel.challengerUid] !== undefined && qAnswers[duel.opponentUid] !== undefined;
+      if (!bothAnswered) return;
+
+      if (qIdx < 3) {
+        await updateDoc(doc(db, "rooms", code), {
+          activeDuel: {
+            ...duel,
+            qIndex: qIdx + 1
+          }
+        });
+        return;
+      }
+
+      const cScore = duel.scores?.[duel.challengerUid] ?? 0;
+      const oScore = duel.scores?.[duel.opponentUid] ?? 0;
+
+      let loserUid = null;
+      let winnerUid = null;
+      if (cScore < oScore) {
+        loserUid = duel.challengerUid;
+        winnerUid = duel.opponentUid;
+      } else if (oScore < cScore) {
+        loserUid = duel.opponentUid;
+        winnerUid = duel.challengerUid;
+      }
+
+      const players = [...(latest.players || [])];
+      let elimCounter = players.filter((p) => p.eliminatedOrder != null).length;
+
+      const updatedPlayers = players.map((p) => {
+        let nextP = { ...p };
+        if (winnerUid && p.uid === winnerUid) {
+          nextP.wins = (nextP.wins ?? 0) + 1;
+        }
+        if (loserUid && p.uid === loserUid) {
+          const nextLives = Math.max(0, (nextP.lives ?? 3) - 1);
+          nextP.lives = nextLives;
+          if (nextLives === 0 && nextP.eliminatedOrder == null) {
+            elimCounter += 1;
+            nextP.eliminatedOrder = elimCounter;
+          }
+        }
+        return nextP;
+      });
+
+      const aliveAfter = updatedPlayers.filter((p) => (p.lives ?? 3) > 0);
+      if (aliveAfter.length <= 1) {
+        const standings = buildStandings(updatedPlayers);
+        await updateDoc(doc(db, "rooms", code), {
+          players: updatedPlayers,
+          activeDuel: null,
+          status: "finished",
+          finalStandings: standings
+        });
+      } else {
+        await updateDoc(doc(db, "rooms", code), {
+          players: updatedPlayers,
+          activeDuel: null
+        });
+      }
+    }
+
+    function buildStandings(players) {
+      const total = players.length;
+      const deltas = getRatingDistribution(total);
+
+      const sorted = [...players].sort((a, b) => {
+        const aAlive = (a.lives ?? 3) > 0 ? 1 : 0;
+        const bAlive = (b.lives ?? 3) > 0 ? 1 : 0;
+        if (aAlive !== bAlive) return bAlive - aAlive;
+        if ((b.lives ?? 3) !== (a.lives ?? 3)) return (b.lives ?? 3) - (a.lives ?? 3);
+        if ((b.wins ?? 0) !== (a.wins ?? 0)) return (b.wins ?? 0) - (a.wins ?? 0);
+        return (b.eliminatedOrder ?? 99) - (a.eliminatedOrder ?? 99);
+      });
+
+      return sorted.map((p, idx) => ({
+        uid: p.uid,
+        email: p.email,
+        color: p.color,
+        rank: idx + 1,
+        lives: p.lives ?? 0,
+        wins: p.wins ?? 0,
+        ratingDelta: deltas[idx] ?? 0
+      }));
+    }
+
+    async function finishGame(code, room) {
+      const standings = buildStandings(room.players || []);
+      await updateDoc(doc(db, "rooms", code), {
+        status: "finished",
+        activeDuel: null,
+        finalStandings: standings
+      });
+    }
+
+    async function applyRatingToUser(delta) {
+      if (!currentUser) return;
+      const userRef = doc(db, "users", currentUser.uid);
+      const snap = await getDoc(userRef);
+      const currentScore = snap.exists() ? (snap.data().score ?? 0) : 0;
+      const nextScore = currentScore + delta;
+      await updateDoc(userRef, { score: nextScore });
+      userScoreLabel.textContent = nextScore;
+      setStatus(`Yarış bitdi! Reytinq balınız ${delta >= 0 ? "+" + delta : delta} dəyişdi.`);
+    }
+
+    function renderFinalStandings(standings) {
+      const rows = standings
+        .map((s) => {
+          const signVal = s.ratingDelta > 0 ? `+${s.ratingDelta}` : `${s.ratingDelta}`;
+          return `
+            <tr>
+              <td><strong>#${s.rank}</strong></td>
+              <td>
+                <span class="player-dot" style="display:inline-block; vertical-align:middle; margin-right:6px; background:${s.color}; color:${s.color};"></span>
+                <strong style="color:${s.color};">${escapeHtml(shortName(s.email))}</strong>
+              </td>
+              <td>${s.lives} can</td>
+              <td>${s.wins} qələbə</td>
+              <td><strong>${signVal} bal</strong></td>
+            </tr>
+          `;
+        })
+        .join("");
+
+      standingsContainer.innerHTML = `
+        <table class="standings-table">
+          <thead>
+            <tr>
+              <th>Yer</th>
+              <th>Oyunçu</th>
+              <th>Qalan can</th>
+              <th>Duel qələbəsi</th>
+              <th>Reytinq balı</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    document.getElementById("leaveRoomBtn").addEventListener("click", async () => {
+      if (unsubscribeRoom) unsubscribeRoom();
+      if (timerInterval) clearInterval(timerInterval);
+      if (botActionTimeout) {
+        clearTimeout(botActionTimeout);
+        botActionTimeout = null;
+      }
+      if (currentRoomId && currentUser) {
+        const roomRef = doc(db, "rooms", currentRoomId);
+        const snap = await getDoc(roomRef);
+        if (snap.exists()) {
+          const remaining = (snap.data().players || []).filter((p) => p.uid !== currentUser.uid);
+          const nextHost = remaining[0]?.uid ?? null;
+          await updateDoc(roomRef, { players: remaining, hostId: nextHost });
+        }
+      }
+      currentRoomId = null;
+      latestRoom = null;
+      roomSection.classList.add("hidden");
+      lobbySection.classList.remove("hidden");
+    });
+  </script>
+</body>
+</html>
