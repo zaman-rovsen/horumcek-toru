@@ -4,22 +4,29 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hörümçək Toru</title>
-  <meta name="theme-color" content="#0b1020" />
+  <meta name="theme-color" content="#090e1a" />
   <style>
     :root {
-      --bg: #0b1020; --card: #121a30; --card-2: #182340; --line: #28375e;
-      --text: #eef3ff; --muted: #9fb0d6; --accent: #3b82f6; --ok: #22c55e;
-      --danger: #ef4444; --warn: #f59e0b;
+      --bg: #090e1a;
+      --card: #11192e;
+      --card-2: #182340;
+      --line: #27375e;
+      --text: #eef3ff;
+      --muted: #9fb0d6;
+      --accent: #3b82f6;
+      --ok: #22c55e;
+      --danger: #ef4444;
+      --warn: #f59e0b;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 14px; display: flex; justify-content: center; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 12px; display: flex; justify-content: center; }
     .app { width: 100%; max-width: 560px; display: flex; flex-direction: column; gap: 12px; }
-    .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px; }
     .top-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
     .title { font-size: 19px; font-weight: 800; }
     .subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
-    .nav-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-    .tab-btn { background: var(--card-2); color: var(--muted); border: 1px solid var(--line); border-radius: 10px; padding: 8px 4px; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .nav-tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+    .tab-btn { background: var(--card-2); color: var(--muted); border: 1px solid var(--line); border-radius: 10px; padding: 8px 3px; font-size: 11px; font-weight: 700; cursor: pointer; }
     .tab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
     .sec-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
     .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
@@ -35,19 +42,181 @@
     .avatar-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
     .avatar-opt { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 7px 0; text-align: center; font-size: 19px; cursor: pointer; }
     .avatar-opt.selected { border-color: var(--accent); background: var(--card-2); }
-    .avatar-box { width: 38px; height: 38px; border-radius: 50%; background: var(--card-2); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 19px; overflow: hidden; flex-shrink: 0; }
-    .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
     .list { display: flex; flex-direction: column; gap: 7px; }
     .item-card { background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: 9px 11px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-    .item-card.selectable { cursor: pointer; }
-    .item-card.selected { border-color: var(--accent); background: var(--card-2); }
     .badge { font-size: 11px; padding: 3px 8px; border-radius: 999px; background: var(--card-2); border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
     .badge.ok { color: #86efac; border-color: #166534; }
-    .badge.warn { color: #fcd34d; border-color: #92400e; }
-    .invite-banner { background: linear-gradient(135deg, #1d4ed8, #0f172a); border: 1px solid #60a5fa; border-radius: 12px; padding: 12px; text-align: center; }
-    .q-box { background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: 11px; margin-bottom: 8px; }
-    .opts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; border: 1px solid #475569; padding: 9px 15px; border-radius: 10px; font-size: 13px; z-index: 999; display: none; }
+
+    .rules-list { display: flex; flex-direction: column; gap: 8px; font-size: 13px; line-height: 1.45; }
+    .rule-item { background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: 10px 12px; }
+
+    /* HÖRÜMCƏK TORU DAİRƏVİ SAHƏ */
+    .web-arena {
+      position: relative;
+      width: 100%;
+      height: 310px;
+      background: radial-gradient(circle at center, rgba(59,130,246,.13) 0%, rgba(11,16,32,.95) 72%);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .web-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .web-node {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      z-index: 2;
+      max-width: 125px;
+      text-align: center;
+    }
+    .web-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 3px solid #dbeafe;
+      box-shadow: 0 0 12px rgba(59,130,246,.7);
+    }
+    .web-node.is-me .web-dot { background: var(--ok); border-color: #dcfce7; }
+    .web-node.is-target .web-dot { background: var(--warn); border-color: #fef3c7; }
+    .web-label {
+      background: rgba(17, 25, 46, .92);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 3px 7px;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .web-sub { font-size: 10px; color: var(--muted); }
+
+    /* AŞAĞI SEÇİM VƏ 3 CAN */
+    .select-footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .hearts-row { display: flex; gap: 6px; font-size: 20px; align-items: center; }
+    .heart.lost { opacity: .22; filter: grayscale(1); }
+
+    .call-banner {
+      margin-top: 10px;
+      background: rgba(59, 130, 246, .16);
+      border: 1px solid #60a5fa;
+      border-radius: 12px;
+      padding: 10px 12px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .countdown-box {
+      margin-top: 8px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 900;
+      color: #fde047;
+    }
+
+    /* YENİ PƏNCƏRƏ (MODAL) SUAL BÖLÜMÜ */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, .85);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      z-index: 1000;
+    }
+    .modal-window {
+      width: 100%;
+      max-width: 520px;
+      background: var(--card);
+      border: 1px solid #475569;
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.65);
+    }
+    .modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .timer-pill {
+      background: var(--card-2);
+      border: 1px solid var(--warn);
+      color: #fde047;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .q-text {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .ans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .ans-btn {
+      background: var(--card-2);
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      padding: 11px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: left;
+    }
+    .ans-btn.correct { background: rgba(34, 197, 94, .25); border-color: var(--ok); color: #bbf7d0; }
+    .ans-btn.wrong { background: rgba(239, 68, 68, .25); border-color: var(--danger); color: #fecaca; }
+    .ans-review {
+      margin-top: 10px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      padding: 10px;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .c-green { color: #4ade80; font-weight: 700; }
+    .c-red { color: #f87171; font-weight: 700; }
+
+    .toast {
+      position: fixed;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e293b;
+      color: #fff;
+      border: 1px solid #475569;
+      padding: 9px 15px;
+      border-radius: 10px;
+      font-size: 13px;
+      z-index: 1200;
+      display: none;
+    }
     .hidden { display: none !important; }
   </style>
 </head>
@@ -56,13 +225,14 @@
     <div class="card top-bar">
       <div>
         <div class="title">🕸️ Hörümçək Toru</div>
-        <div class="subtitle" id="statusSub">Qeydiyyat və ya giriş gözlənilir</div>
+        <div class="subtitle" id="statusSub">Qeydiyyat gözlənilir</div>
       </div>
       <div id="headerRight"></div>
     </div>
 
     <div class="nav-tabs" id="mainNav">
-      <button class="tab-btn active" data-tab="room" onclick="switchTab('room')">Otaq & Duel</button>
+      <button class="tab-btn active" data-tab="room" onclick="switchTab('room')">Tor & Duel</button>
+      <button class="tab-btn" data-tab="rules" onclick="switchTab('rules')">Qaydalar</button>
       <button class="tab-btn" data-tab="friends" onclick="switchTab('friends')">Dostlar</button>
       <button class="tab-btn" data-tab="rank" onclick="switchTab('rank')">Reytinq</button>
       <button class="tab-btn" data-tab="profile" onclick="switchTab('profile')">Profil</button>
@@ -70,29 +240,29 @@
 
     <!-- QEYDİYYAT -->
     <div class="card" id="authView">
-      <div class="sec-title">Qeydiyyat və Profil Yaradılması</div>
+      <div class="sec-title">Profil Yaradılması</div>
       <div class="field">
-        <label>Ləqəb (Nickname)</label>
-        <input type="text" id="regNick" placeholder="Məsələn: rovshan_pro" maxlength="20" />
+        <label>Ləqəb</label>
+        <input type="text" id="regNick" placeholder="Ləqəbinizi yazın" maxlength="20" />
       </div>
       <div class="field">
-        <label>E-poçt ünvanı</label>
+        <label>E-poçt</label>
         <div class="row">
           <input type="email" id="regEmail" placeholder="ad@domain.com" style="flex:1" />
           <button class="btn secondary" type="button" onclick="sendVerifyCode()">Kod göndər</button>
         </div>
       </div>
       <div id="verifyBox" class="field hidden">
-        <label id="verifyHint">E-poçta göndərilən 4 rəqəmli kodu daxil et</label>
+        <label id="verifyHint">4 rəqəmli kod</label>
         <div class="row">
-          <input type="text" id="regCode" placeholder="4 rəqəmli kod" maxlength="4" style="flex:1" />
+          <input type="text" id="regCode" placeholder="Kod" maxlength="4" style="flex:1" />
           <button class="btn success" type="button" onclick="confirmEmailCode()">Təsdiqlə</button>
         </div>
       </div>
       <div class="field">
         <label>Şəhər / Rayon</label>
         <select id="regCity">
-          <option value="">Şəhər seçin</option>
+          <option value="">Seçin</option>
           <option value="Bakı">Bakı</option><option value="Gəncə">Gəncə</option>
           <option value="Sumqayıt">Sumqayıt</option><option value="Quba">Quba</option>
           <option value="Ucar">Ucar</option><option value="Şəki">Şəki</option>
@@ -100,31 +270,30 @@
         </select>
       </div>
       <div class="field">
-        <label>Hazır Avatar seç və ya öz şəklini yüklə</label>
+        <label>Avatar</label>
         <div class="avatar-grid" id="avatarPicker"></div>
-        <input type="file" id="regPhoto" accept="image/*" style="margin-top:6px" onchange="handlePhotoUpload(event, 'reg')" />
       </div>
-      <button class="btn" style="width:100%" onclick="completeRegistration()">Qeydiyyatı Tamamla</button>
+      <button class="btn" style="width:100%" onclick="completeRegistration()">Daxil Ol</button>
     </div>
 
-    <!-- OTAQ VƏ DUEL -->
+    <!-- TOR & DUEL -->
     <div id="tab-room" class="hidden">
       <div class="card" id="roomLobbyCard">
         <div class="sec-title">Otaq Yarat və ya Qoşul</div>
         <div class="field">
-          <label>Yeni otağın adı</label>
-          <input type="text" id="newRoomName" placeholder="Məsələn: Axşam Turniri" maxlength="25" />
+          <label>Otağın adı</label>
+          <input type="text" id="newRoomName" placeholder="Otaq adını yazın" maxlength="25" />
         </div>
         <div class="field">
           <label>Otaq növü</label>
           <select id="newRoomType" onchange="toggleRoomPassInput()">
-            <option value="open">Açıq otaq (hər kəs görə və qoşula bilər)</option>
-            <option value="private">Şifrəli otaq (yalnız şifrə ilə)</option>
+            <option value="open">Açıq otaq</option>
+            <option value="private">Şifrəli otaq</option>
           </select>
         </div>
         <div id="newRoomPassField" class="field hidden">
-          <label>Otaq şifrəsi</label>
-          <input type="password" id="newRoomPass" placeholder="Şifrə daxil edin" maxlength="20" />
+          <label>Şifrə</label>
+          <input type="password" id="newRoomPass" placeholder="Şifrə" maxlength="20" />
         </div>
         <button class="btn success" style="width:100%; margin-bottom:12px" onclick="createRoom()">Otaq Yarat</button>
 
@@ -133,60 +302,71 @@
 
         <div class="sec-title">Şifrəli Otağa Qoşul</div>
         <div class="row">
-          <input type="text" id="joinRoomId" placeholder="Otaq ID" style="flex:1" />
+          <input type="text" id="joinRoomId" placeholder="ID" style="flex:1" />
           <input type="password" id="joinRoomPass" placeholder="Şifrə" style="flex:1" />
           <button class="btn" onclick="joinPrivateRoom()">Qoşul</button>
         </div>
       </div>
 
-      <!-- AKTİV OTAQ: YUXARIDA TOR, AŞAĞIDA RƏQİB SEÇİMİ -->
-      <div id="activeRoomCard" class="hidden" style="display:flex; flex-direction:column; gap:12px;">
+      <!-- AKTİV OTAQ: YUXARIDA DAİRƏVİ TOR, AŞAĞIDA DUELƏ ÇAĞIR + 3 CAN -->
+      <div id="activeRoomCard" class="app hidden">
         <div class="card">
           <div class="top-bar" style="margin-bottom:8px">
             <div>
-              <div class="sec-title" style="margin-bottom:1px" id="roomHeaderTitle">Otaq</div>
+              <div class="sec-title" style="margin-bottom:1px" id="roomHeaderTitle">Tor</div>
               <div class="subtitle" id="roomHeaderMeta"></div>
             </div>
             <button class="btn danger sm" onclick="leaveRoom()">Otaqdan çıx</button>
           </div>
 
-          <div class="list" id="roomPlayersList"></div>
-
-          <div id="inviteFriendBox" class="hidden" style="margin-top:10px">
-            <div class="sec-title" style="font-size:13px; margin-bottom:5px">Boş Yerə Dost Çağır</div>
-            <div class="list" id="roomInviteFriendsList"></div>
+          <div class="web-arena" id="webArena">
+            <svg class="web-svg" id="webSvg" viewBox="0 0 520 310" preserveAspectRatio="none">
+              <defs>
+                <marker id="arrowHead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L7,3 z" fill="#facc15" />
+                </marker>
+              </defs>
+              <circle cx="260" cy="155" r="42" fill="none" stroke="#24355a" stroke-width="1.2" />
+              <circle cx="260" cy="155" r="82" fill="none" stroke="#24355a" stroke-width="1.2" />
+              <circle cx="260" cy="155" r="118" fill="none" stroke="#24355a" stroke-width="1.2" />
+            </svg>
+            <div id="webNodesLayer"></div>
           </div>
 
-          <div id="inviteBanner" class="invite-banner hidden" style="margin-top:10px">
-            <div style="font-weight:800; font-size:15px" id="inviteBannerText"></div>
-            <div class="subtitle">Duel açılır...</div>
-          </div>
+          <div class="subtitle" id="minPlayersNotice" style="margin-top:8px; text-align:center;"></div>
+          <div id="callBanner" class="call-banner hidden"></div>
+          <div id="countdownBox" class="countdown-box hidden"></div>
         </div>
 
-        <div class="card" id="opponentSelectBox">
-          <div class="sec-title" style="margin-bottom:2px">Rəqibini Seç</div>
-          <div class="subtitle" style="margin-bottom:8px">Seçim təsdiqləndikdən sonra ləğv edilə bilməz.</div>
-          <div class="list" id="openOpponentsList" style="margin-bottom:10px"></div>
-          <button class="btn" id="confirmDuelBtn" style="width:100%" disabled onclick="confirmDuelSelection()">Seçimi Təsdiqlə</button>
+        <div class="card">
+          <div class="sec-title">Duelə Çağır</div>
+          <div class="field">
+            <label>Rəqib seç</label>
+            <select id="opponentSelect" onchange="onOpponentDropdownChange()"></select>
+          </div>
+          <div class="select-footer-row">
+            <button class="btn" id="callDuelBtn" onclick="triggerCallDuel()">Duelə Çağır</button>
+            <div class="hearts-row" id="myHeartsRow" title="Canlar"></div>
+          </div>
+          <div class="subtitle" style="margin-top:8px">
+            3 oyunçu: 3, 1, 0 · 4 oyunçu: 4, 2, 0, -1 · 5 oyunçu: 5, 3, 1, 0, -1
+          </div>
         </div>
+      </div>
+    </div>
 
-        <div class="card hidden" id="activeDuelBox">
-          <div class="item-card" style="margin-bottom:8px">
-            <div>
-              <div style="font-weight:700" id="duelMatchupTitle">Duel gedir</div>
-              <div class="subtitle" id="duelQuestionMeta">Baza: yüklənir</div>
-            </div>
-            <span class="badge warn" id="connBadge">Bağlantı: Aktiv</span>
-          </div>
-          <div class="q-box">
-            <div class="subtitle" id="duelCategoryBadge">Kateqoriya</div>
-            <div style="font-weight:700; font-size:15px; margin-top:3px" id="duelQuestionText">Sual yüklənir...</div>
-          </div>
-          <div class="opts-grid" id="duelOptionsGrid"></div>
-          <div class="row" style="margin-top:8px">
-            <button class="btn danger sm" style="flex:1" onclick="simulateOpponentDisconnect()">Rəqibin İnterneti Kəsildi</button>
-            <button class="btn secondary sm" style="flex:1" onclick="simulateOpponentReconnect()">Rəqib Geri Qayıtdı (-1 can)</button>
-          </div>
+    <!-- OYUN QAYDALARI -->
+    <div class="card hidden" id="tab-rules">
+      <div class="sec-title">Oyun Qaydaları</div>
+      <div class="rules-list">
+        <div class="rule-item"><b>Oyunçu sayı:</b> Oyunun başlaması üçün otaqda ən az <b>3</b> oyunçu olmalıdır (<b>3, 4 və ya 5</b> oyunçu ilə oynanılır). 3 nəfərdən az olduqda oyun başlamır.</div>
+        <div class="rule-item"><b>Tor və çağırış:</b> Yuxarıda oyunçular dairə ətrafında yerləşir, rəqib seçilib çağırılanda ikisini oxlu xətt birləşdirir və <i>"A duelə B-ni çağırdı"</i> bildirişi görünür, ardınca <b>5 - 4 - 3 - 2 - 1 Başladıq!</b> geri sayımı gedir.</div>
+        <div class="rule-item"><b>3 can:</b> Hər oyunçunun yanında yan-yana düzülmüş <b>3 can (❤️❤️❤️)</b> var.</div>
+        <div class="rule-item"><b>Sual pəncərəsi və vaxt:</b> Duel sualları yeni pəncərədə açılır, hər suala <b>25 saniyə</b> vaxt verilir. Hər iki iştirakçı cavab verəndə vaxt bitir və növbəti suala keçilir (<i>Duelin ilk sualı</i>, <i>Duelin ikinci sualı · Hesab A 1-1 B</i>, <i>Duelin üçüncü sualı · Hesab A 2-1 B</i>). Sual bitəndən sonra cavablar və düzgün cavab rəngli görünür.</div>
+        <div class="rule-item"><b>Xal qaydası:</b> Xal hər suala görə yox, <b>duelin sonunda yekun nəticəyə görə</b> verilir:
+          <br>• <b>3 oyunçu:</b> 3, 1, 0
+          <br>• <b>4 oyunçu:</b> 4, 2, 0, -1
+          <br>• <b>5 oyunçu:</b> 5, 3, 1, 0, -1
         </div>
       </div>
     </div>
@@ -195,33 +375,28 @@
     <div class="card hidden" id="tab-friends">
       <div class="sec-title">Dost Əlavə Et</div>
       <div class="row" style="margin-bottom:12px">
-        <input type="text" id="friendSearchNick" placeholder="Oyunçu ləqəbini yaz" style="flex:1" />
-        <button class="btn" onclick="sendFriendRequest()">Təklif Göndər</button>
+        <input type="text" id="friendSearchNick" placeholder="Ləqəb" style="flex:1" />
+        <button class="btn" onclick="sendFriendRequest()">Göndər</button>
       </div>
-      <div class="sec-title">Gələn Dost Təklifləri</div>
+      <div class="sec-title">Gələn Təkliflər</div>
       <div class="list" id="incomingRequestsList" style="margin-bottom:12px"></div>
-      <div class="sec-title">Dost Siyahısı</div>
+      <div class="sec-title">Dostlar</div>
       <div class="list" id="friendsList"></div>
     </div>
 
     <!-- REYTİNQ -->
     <div class="card hidden" id="tab-rank">
-      <div class="sec-title">Ümumi Reytinq Cədvəli</div>
+      <div class="sec-title">Reytinq Cədvəli</div>
       <div class="list" id="rankingList"></div>
     </div>
 
     <!-- PROFİL -->
     <div class="card hidden" id="tab-profile">
-      <div class="sec-title">Profil Məlumatları</div>
-      <div class="row" style="margin-bottom:12px">
-        <div class="avatar-box" id="profAvatarPreview">🕸️</div>
-        <div>
-          <div style="font-weight:800; font-size:15px" id="profNickText">-</div>
-          <div class="subtitle" id="profMetaText">-</div>
-        </div>
-      </div>
+      <div class="sec-title">Profil</div>
+      <div style="font-weight:800; font-size:16px" id="profNickText">-</div>
+      <div class="subtitle" style="margin-bottom:10px" id="profMetaText">-</div>
       <div class="field">
-        <label>Şəhəri dəyiş</label>
+        <label>Şəhər</label>
         <select id="profCity">
           <option value="Bakı">Bakı</option><option value="Gəncə">Gəncə</option>
           <option value="Sumqayıt">Sumqayıt</option><option value="Quba">Quba</option>
@@ -229,11 +404,29 @@
           <option value="Lənkəran">Lənkəran</option><option value="Digər">Digər</option>
         </select>
       </div>
-      <div class="field">
-        <label>Yeni şəkil yüklə</label>
-        <input type="file" accept="image/*" onchange="handlePhotoUpload(event, 'prof')" />
-      </div>
       <button class="btn success" style="width:100%" onclick="saveProfileChanges()">Yadda Saxla</button>
+    </div>
+  </div>
+
+  <!-- YENİ PƏNCƏRƏ: SUAL BÖLÜMÜ -->
+  <div class="modal-backdrop hidden" id="questionModal">
+    <div class="modal-window">
+      <div class="modal-top">
+        <div>
+          <div style="font-weight:800; font-size:15px" id="modalRoundHeader">Duelin ilk sualı</div>
+          <div class="subtitle" id="modalScoreHeader">Hesab: A 0–0 B</div>
+        </div>
+        <div class="timer-pill" id="modalTimer">25s</div>
+      </div>
+
+      <div class="q-text" id="modalQuestionText">Sual yüklənir...</div>
+      <div class="ans-grid" id="modalOptionsGrid"></div>
+      <div class="ans-review hidden" id="modalReviewBox"></div>
+
+      <div class="row" style="margin-top:12px">
+        <button class="btn secondary sm" style="flex:1" onclick="simulateBotAnswer()">Rəqib cavab versin (test)</button>
+        <button class="btn success sm" style="flex:1" onclick="finishDuelSession()">Dueli Bitir</button>
+      </div>
     </div>
   </div>
 
@@ -241,133 +434,129 @@
 
   <script>
     const AVATARS = ["🕸️", "🦁", "🦅", "🐺", "🦊", "🐉"];
-    const STORAGE_KEY = "horumcek_toru_v3_state";
+    const STORAGE_KEY = "horumcek_toru_v6_state";
     const channel = ("BroadcastChannel" in window) ? new BroadcastChannel("horumcek_toru_channel") : null;
 
-    const FALLBACK_QUESTIONS = [
-      { id: 1, cat: "İnformatika", q: "HTML-də ən böyük başlıq teqi hansıdır?", opts: ["<h1>", "<h6>", "<head>", "<title>"], ans: 0 },
-      { id: 2, cat: "Tarix", q: "Azərbaycan Xalq Cümhuriyyəti neçənci ildə yaradılıb?", opts: ["1918", "1920", "1991", "1905"], ans: 0 },
-      { id: 3, cat: "Coğrafiya", q: "Dünyanın ən uzun çayı hansı hesab olunur?", opts: ["Nil", "Kür", "Dunay", "Volqa"], ans: 0 },
-      { id: 4, cat: "Məntiq", q: "2, 6, 12, 20, 30 ardıcıllığında növbəti ədəd hansıdır?", opts: ["42", "36", "40", "48"], ans: 0 },
-      { id: 5, cat: "Ədəbiyyat", q: "'Balaca şahzadə' əsərinin müəllifi kimdir?", opts: ["Antuan de Sent-Ekzüperi", "Aqata Kristi", "Corc Oruell", "Nizami Gəncəvi"], ans: 0 }
+    const QUESTIONS = [
+      { id: 1, q: "HTML-də ən böyük başlıq teqi hansıdır?", opts: ["<h1>", "<h6>", "<head>", "<title>"], ans: 0 },
+      { id: 2, q: "Azərbaycan Xalq Cümhuriyyəti nə vaxt qurulub?", opts: ["1918", "1920", "1991", "1905"], ans: 0 },
+      { id: 3, q: "2, 6, 12, 20, 30 ardıcıllığında növbəti ədəd?", opts: ["42", "36", "40", "48"], ans: 0 },
+      { id: 4, q: "'Balaca şahzadə' əsərinin müəllifi kimdir?", opts: ["Sent-Ekzüperi", "Aqata Kristi", "Corc Oruell", "Nizami"], ans: 0 },
+      { id: 5, q: "Python-da siyahıya element əlavə edən metod?", opts: ["append()", "push()", "add()", "insertAll()"], ans: 0 }
     ];
 
-    let questionBank = [...FALLBACK_QUESTIONS];
-    let pendingEmailCode = null, emailVerified = false, tempPhotoData = null;
-    let selectedAvatar = AVATARS[0], selectedOpponentId = null;
+    const ORDINALS = ["ilk", "ikinci", "üçüncü", "dördüncü", "beşinci", "altıncı", "yeddinci", "səkkizinci"];
+
+    const SCORE_TABLES = {
+      3: [3, 1, 0],
+      4: [4, 2, 0, -1],
+      5: [5, 3, 1, 0, -1]
+    };
+
+    let selectedAvatar = AVATARS[0];
+    let pendingCode = null;
+    let countdownInterval = null;
+    let questionInterval = null;
 
     const defaultState = {
-      currentUserId: null, usedQuestionIds: [], users: [],
-      rooms: [{ id: "101", name: "Açıq Tor Otağı", type: "open", password: "", maxPlayers: 4, players: [], lockedOpponentFor: {}, activeDuel: null, inviteBanner: null }],
-      friendships: {}, friendRequests: []
+      currentUserId: null,
+      users: [
+        { id: "u_bot1", nick: "nadir_tarix", email: "nadir@test.az", city: "Ucar", avatar: "🦅", score: 0, lives: 3 },
+        { id: "u_bot2", nick: "elmeddin_mnt", email: "elmeddin@test.az", city: "Bakı", avatar: "🦁", score: 0, lives: 3 }
+      ],
+      rooms: [
+        {
+          id: "101",
+          name: "Əsas Tor Otağı",
+          type: "open",
+          password: "",
+          maxPlayers: 5,
+          players: ["u_bot1", "u_bot2"],
+          callInfo: null,
+          duel: null
+        }
+      ],
+      friendships: {},
+      friendRequests: []
     };
 
     let state = loadState();
-
-    async function loadQuestionBank() {
-      try {
-        const res = await fetch("./questions.json", { cache: "no-store" });
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data) && data.length) { questionBank = data; renderAll(); }
-        }
-      } catch {}
-    }
-
-    function pickNextQuestion() {
-      const unused = questionBank.filter(q => !state.usedQuestionIds.includes(q.id));
-      const pool = unused.length ? unused : questionBank;
-      if (!unused.length) state.usedQuestionIds = [];
-      const chosen = pool[Math.floor(Math.random() * pool.length)];
-      if (chosen && chosen.id !== undefined) state.usedQuestionIds.push(chosen.id);
-      return chosen || FALLBACK_QUESTIONS[0];
-    }
 
     function loadState() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         return raw ? { ...structuredClone(defaultState), ...JSON.parse(raw) } : structuredClone(defaultState);
-      } catch { return structuredClone(defaultState); }
+      } catch {
+        return structuredClone(defaultState);
+      }
     }
 
     function saveState(broadcast = true) {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-      catch {
-        showToast("Yaddaş limiti doldu — profil şəkli silinir");
-        state.users.forEach(u => { u.photo = null; });
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
-      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       if (broadcast && channel) channel.postMessage({ type: "SYNC" });
       renderAll();
     }
 
-    if (channel) channel.onmessage = (ev) => { if (ev.data?.type === "SYNC") { state = loadState(); renderAll(); } };
+    if (channel) {
+      channel.onmessage = (ev) => {
+        if (ev.data?.type === "SYNC") {
+          state = loadState();
+          renderAll();
+        }
+      };
+    }
 
     function showToast(msg) {
-      const box = document.getElementById("toastBox");
-      box.textContent = msg; box.style.display = "block";
-      clearTimeout(box._t); box._t = setTimeout(() => { box.style.display = "none"; }, 2500);
+      const el = document.getElementById("toastBox");
+      el.textContent = msg;
+      el.style.display = "block";
+      clearTimeout(el._t);
+      el._t = setTimeout(() => { el.style.display = "none"; }, 2500);
     }
 
     const getCurrentUser = () => state.users.find(u => u.id === state.currentUserId) || null;
     const getUserById = (id) => state.users.find(u => u.id === id) || null;
-    const getAvatarHtml = (u) => !u ? "🕸️" : (u.photo ? `<img src="${u.photo}" alt="${u.nick}" />` : (u.avatar || "🕸️"));
+    const getMyRoom = () => !state.currentUserId ? null : state.rooms.find(r => r.players.includes(state.currentUserId)) || null;
 
     function initAvatarPicker() {
       document.getElementById("avatarPicker").innerHTML = AVATARS.map(av =>
         `<div class="avatar-opt ${av === selectedAvatar ? "selected" : ""}" onclick="pickAvatar('${av}')">${av}</div>`
       ).join("");
     }
-
-    function pickAvatar(av) { selectedAvatar = av; tempPhotoData = null; initAvatarPicker(); }
-
-    function handlePhotoUpload(e, mode) {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        tempPhotoData = reader.result;
-        if (mode === "prof") document.getElementById("profAvatarPreview").innerHTML = `<img src="${tempPhotoData}" alt="avatar" />`;
-      };
-      reader.readAsDataURL(file);
-    }
+    function pickAvatar(av) { selectedAvatar = av; initAvatarPicker(); }
 
     function sendVerifyCode() {
       const email = document.getElementById("regEmail").value.trim();
-      if (!email || !email.includes("@")) return showToast("Düzgün e-poçt ünvanı yazın");
-      pendingEmailCode = String(Math.floor(1000 + Math.random() * 9000));
-      emailVerified = false;
+      if (!email.includes("@")) return showToast("Düzgün e-poçt yazın");
+      pendingCode = String(Math.floor(1000 + Math.random() * 9000));
       document.getElementById("verifyBox").classList.remove("hidden");
-      document.getElementById("verifyHint").textContent = `Sınaq kodu: ${pendingEmailCode}`;
-      showToast("Təsdiq kodu hazırlandı");
+      document.getElementById("verifyHint").textContent = `Sınaq kodu: ${pendingCode}`;
     }
 
     function confirmEmailCode() {
-      if (pendingEmailCode && document.getElementById("regCode").value.trim() === pendingEmailCode) {
-        emailVerified = true; showToast("E-poçt təsdiqləndi");
-      } else showToast("Kod yanlışdır");
+      if (pendingCode && document.getElementById("regCode").value.trim() === pendingCode) {
+        showToast("Təsdiqləndi");
+      } else {
+        showToast("Kod səhvdir");
+      }
     }
 
     function completeRegistration() {
       const nick = document.getElementById("regNick").value.trim();
       const email = document.getElementById("regEmail").value.trim();
       const city = document.getElementById("regCity").value;
-      if (!nick) return showToast("Ləqəb daxil edin");
-      if (!email || !email.includes("@")) return showToast("E-poçt ünvanı daxil edin");
-      if (!city) return showToast("Şəhər / Rayon seçin");
+      if (!nick || !email.includes("@") || !city) return showToast("Bütün xanaları doldurun");
 
-      const newUser = { id: "u_" + Date.now(), nick, email, city, avatar: selectedAvatar, photo: tempPhotoData, score: 0, wins: 0, lives: 3 };
-      state.users.push(newUser);
-      state.currentUserId = newUser.id;
-      state.friendships[newUser.id] = state.friendships[newUser.id] || [];
-      tempPhotoData = null;
+      const u = { id: "u_" + Date.now(), nick, email, city, avatar: selectedAvatar, score: 0, lives: 3 };
+      state.users.push(u);
+      state.currentUserId = u.id;
+      state.rooms[0].players.push(u.id);
       saveState();
-      showToast("Profil yaradıldı");
     }
 
     function switchTab(tab) {
       document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
-      ["room", "friends", "rank", "profile"].forEach(t => document.getElementById("tab-" + t).classList.toggle("hidden", t !== tab));
+      ["room", "rules", "friends", "rank", "profile"].forEach(t => document.getElementById("tab-" + t).classList.toggle("hidden", t !== tab));
       renderAll();
     }
 
@@ -377,36 +566,32 @@
 
     function createRoom() {
       const me = getCurrentUser();
-      if (!me) return showToast("Əvvəlcə qeydiyyatdan keçin");
+      if (!me) return;
       const name = document.getElementById("newRoomName").value.trim() || "Tor Otağı";
       const type = document.getElementById("newRoomType").value;
       const password = type === "private" ? document.getElementById("newRoomPass").value.trim() : "";
       if (type === "private" && !password) return showToast("Şifrə yazın");
 
       leaveRoom(true);
+      me.lives = 3;
       state.rooms.push({
         id: String(Math.floor(100 + Math.random() * 900)),
-        name, type, password, maxPlayers: 4, players: [me.id],
-        lockedOpponentFor: {}, activeDuel: null, inviteBanner: null
+        name, type, password, maxPlayers: 5, players: [me.id], callInfo: null, duel: null
       });
-      me.lives = 3;
-      document.getElementById("newRoomName").value = "";
-      document.getElementById("newRoomPass").value = "";
       saveState();
     }
 
-    function joinRoomById(roomId, pass = "") {
+    function joinRoomById(id, pass = "") {
       const me = getCurrentUser();
-      if (!me) return showToast("Əvvəlcə qeydiyyatdan keçin");
-      const room = state.rooms.find(r => r.id === roomId);
+      if (!me) return;
+      const room = state.rooms.find(r => r.id === id);
       if (!room) return showToast("Otaq tapılmadı");
       if (room.type === "private" && room.password !== pass) return showToast("Şifrə yanlışdır");
       if (room.players.length >= room.maxPlayers && !room.players.includes(me.id)) return showToast("Otaq doludur");
 
       leaveRoom(true);
-      if (!room.players.includes(me.id)) room.players.push(me.id);
       me.lives = 3;
-      selectedOpponentId = null;
+      if (!room.players.includes(me.id)) room.players.push(me.id);
       saveState();
     }
 
@@ -414,95 +599,251 @@
       joinRoomById(document.getElementById("joinRoomId").value.trim(), document.getElementById("joinRoomPass").value.trim());
     }
 
-    const getMyRoom = () => !state.currentUserId ? null : state.rooms.find(r => r.players.includes(state.currentUserId)) || null;
-
     function leaveRoom(silent = false) {
       const me = getCurrentUser(), room = getMyRoom();
-      if (me && room) { room.players = room.players.filter(id => id !== me.id); delete room.lockedOpponentFor[me.id]; }
-      selectedOpponentId = null;
+      if (me && room) room.players = room.players.filter(id => id !== me.id);
       if (!silent) saveState();
     }
 
-    function selectOpponent(id) {
-      const room = getMyRoom();
-      if (!room || room.lockedOpponentFor[state.currentUserId]) return;
-      selectedOpponentId = id; renderAll();
+    function onOpponentDropdownChange() {
+      renderWebArena();
     }
 
-    function confirmDuelSelection() {
+    function triggerCallDuel() {
       const me = getCurrentUser(), room = getMyRoom();
-      if (!me || !room || !selectedOpponentId) return;
-      room.lockedOpponentFor[me.id] = selectedOpponentId;
-      const opp = getUserById(selectedOpponentId);
-      room.inviteBanner = `${me.nick} vs ${opp ? opp.nick : "Rəqib"}`;
-      room.activeDuel = { p1: me.id, p2: selectedOpponentId, question: pickNextQuestion(), disconnectedUserId: null };
-      selectedOpponentId = null;
+      const targetId = document.getElementById("opponentSelect").value;
+      if (!me || !room) return;
+      if (room.players.length < 3) return showToast("Oyun üçün ən az 3 oyunçu lazımdır");
+      if (!targetId) return showToast("Rəqib seçin");
+
+      room.callInfo = { callerId: me.id, targetId };
       saveState();
-      showToast("Duel başladı");
+      startCountdownSequence(room, me.id, targetId);
     }
 
-    function answerDuelOption(idx) {
+    function startCountdownSequence(room, callerId, targetId) {
+      clearInterval(countdownInterval);
+      const countBox = document.getElementById("countdownBox");
+      countBox.classList.remove("hidden");
+      const seq = ["5", "4", "3", "2", "1", "Başladıq!"];
+      let idx = 0;
+      countBox.textContent = seq[idx];
+
+      countdownInterval = setInterval(() => {
+        idx++;
+        if (idx < seq.length) {
+          countBox.textContent = seq[idx];
+        } else {
+          clearInterval(countdownInterval);
+          countBox.classList.add("hidden");
+          openDuelQuestionModal(room, callerId, targetId);
+        }
+      }, 650);
+    }
+
+    function openDuelQuestionModal(room, p1Id, p2Id) {
+      const q = QUESTIONS[Math.floor(Math.random() * QUESTIONS.length)];
+      room.duel = {
+        p1Id,
+        p2Id,
+        round: 1,
+        score1: 0,
+        score2: 0,
+        question: q,
+        answers: {},
+        timeLeft: 25,
+        finishedRound: false
+      };
+      saveState();
+      startQuestionTimer();
+    }
+
+    function startQuestionTimer() {
+      clearInterval(questionInterval);
+      questionInterval = setInterval(() => {
+        const room = getMyRoom();
+        if (!room?.duel || room.duel.finishedRound) return;
+        room.duel.timeLeft--;
+        if (room.duel.timeLeft <= 0) {
+          resolveCurrentRound(room);
+        }
+        saveState();
+      }, 1000);
+    }
+
+    function submitQuestionAnswer(optIdx) {
       const me = getCurrentUser(), room = getMyRoom();
-      if (!me || !room?.activeDuel) return;
-      if (idx === room.activeDuel.question.ans) { me.score = (me.score || 0) + 20; showToast("Düzgün cavab! +20 xal"); }
-      else { me.lives = Math.max(0, (me.lives ?? 3) - 1); showToast("Səhv cavab! -1 can"); }
-      room.activeDuel.question = pickNextQuestion();
+      if (!me || !room?.duel || room.duel.finishedRound) return;
+
+      room.duel.answers[me.id] = optIdx;
+      const bothAnswered = room.duel.answers[room.duel.p1Id] !== undefined && room.duel.answers[room.duel.p2Id] !== undefined;
+      if (bothAnswered) {
+        resolveCurrentRound(room);
+      } else {
+        saveState();
+      }
+    }
+
+    function simulateBotAnswer() {
+      const room = getMyRoom();
+      if (!room?.duel || room.duel.finishedRound) return;
+      const oppId = room.duel.p1Id === state.currentUserId ? room.duel.p2Id : room.duel.p1Id;
+      if (room.duel.answers[oppId] === undefined) {
+        room.duel.answers[oppId] = Math.floor(Math.random() * 4);
+      }
+      const bothAnswered = room.duel.answers[room.duel.p1Id] !== undefined && room.duel.answers[room.duel.p2Id] !== undefined;
+      if (bothAnswered) resolveCurrentRound(room);
+      else saveState();
+    }
+
+    function resolveCurrentRound(room) {
+      clearInterval(questionInterval);
+      const d = room.duel;
+      d.finishedRound = true;
+      const ans1 = d.answers[d.p1Id];
+      const ans2 = d.answers[d.p2Id];
+      if (ans1 === d.question.ans) d.score1++;
+      if (ans2 === d.question.ans) d.score2++;
       saveState();
+
+      setTimeout(() => {
+        const curRoom = getMyRoom();
+        if (!curRoom?.duel) return;
+        curRoom.duel.round++;
+        curRoom.duel.question = QUESTIONS[(curRoom.duel.round - 1) % QUESTIONS.length];
+        curRoom.duel.answers = {};
+        curRoom.duel.timeLeft = 25;
+        curRoom.duel.finishedRound = false;
+        saveState();
+        startQuestionTimer();
+      }, 2200);
     }
 
-    function simulateOpponentDisconnect() {
+    function finishDuelSession() {
+      clearInterval(questionInterval);
       const room = getMyRoom();
-      if (!room?.activeDuel) return;
-      room.activeDuel.disconnectedUserId = room.activeDuel.p1 === state.currentUserId ? room.activeDuel.p2 : room.activeDuel.p1;
-      saveState(); showToast("Rəqibin bağlantısı kəsildi");
-    }
+      if (!room?.duel) return;
 
-    function simulateOpponentReconnect() {
-      const room = getMyRoom();
-      if (!room?.activeDuel?.disconnectedUserId) return;
-      const opp = getUserById(room.activeDuel.disconnectedUserId);
-      if (opp) opp.lives = Math.max(0, (opp.lives ?? 3) - 1);
-      room.activeDuel.disconnectedUserId = null;
-      saveState(); showToast("Rəqib qayıtdı (-1 can)");
+      const count = Math.min(5, Math.max(3, room.players.length));
+      const table = SCORE_TABLES[count] || SCORE_TABLES[3];
+
+      const p1 = getUserById(room.duel.p1Id);
+      const p2 = getUserById(room.duel.p2Id);
+      const s1 = room.duel.score1;
+      const s2 = room.duel.score2;
+
+      let winner = null, loser = null;
+      if (s1 > s2) { winner = p1; loser = p2; }
+      else if (s2 > s1) { winner = p2; loser = p1; }
+
+      if (loser) loser.lives = Math.max(0, (loser.lives ?? 3) - 1);
+
+      const ranked = [...room.players]
+        .map(id => getUserById(id))
+        .filter(Boolean)
+        .sort((a, b) => {
+          const aWin = a.id === winner?.id ? 1 : 0;
+          const bWin = b.id === winner?.id ? 1 : 0;
+          const aLose = a.id === loser?.id ? -1 : 0;
+          const bLose = b.id === loser?.id ? -1 : 0;
+          return (bWin + bLose) - (aWin + aLose);
+        });
+
+      ranked.forEach((u, idx) => {
+        const pts = table[idx] ?? 0;
+        u.score = (u.score || 0) + pts;
+      });
+
+      const endMsg = winner
+        ? `Duelin sonu: ${winner.nick} qalibdir · ${loser?.nick || "Rəqib"} can itirdi`
+        : "Duelin sonu: Heç-heçə";
+
+      room.duel = null;
+      room.callInfo = null;
+      saveState();
+      showToast(endMsg);
     }
 
     function sendFriendRequest() {
       const me = getCurrentUser();
       if (!me) return;
-      const nick = document.getElementById("friendSearchNick").value.trim();
-      const target = state.users.find(u => u.nick.toLowerCase() === nick.toLowerCase() && u.id !== me.id);
-      if (!target) return showToast("İstifadəçi tapılmadı");
+      const nick = document.getElementById("friendSearchNick").value.trim().toLowerCase();
+      const target = state.users.find(u => u.nick.toLowerCase() === nick && u.id !== me.id);
+      if (!target) return showToast("Tapılmadı");
       if (!state.friendRequests.some(r => r.from === me.id && r.to === target.id)) {
         state.friendRequests.push({ id: "fr_" + Date.now(), from: me.id, to: target.id });
       }
       document.getElementById("friendSearchNick").value = "";
-      saveState(); showToast("Təklif göndərildi");
+      saveState();
     }
 
-    function acceptFriendRequest(reqId) {
-      const req = state.friendRequests.find(r => r.id === reqId);
+    function acceptFriendRequest(id) {
+      const req = state.friendRequests.find(r => r.id === id);
       if (!req) return;
       state.friendships[req.from] = state.friendships[req.from] || [];
       state.friendships[req.to] = state.friendships[req.to] || [];
       if (!state.friendships[req.from].includes(req.to)) state.friendships[req.from].push(req.to);
       if (!state.friendships[req.to].includes(req.from)) state.friendships[req.to].push(req.from);
-      state.friendRequests = state.friendRequests.filter(r => r.id !== reqId);
+      state.friendRequests = state.friendRequests.filter(r => r.id !== id);
       saveState();
-    }
-
-    function inviteFriendToRoom(friendId) {
-      const room = getMyRoom();
-      if (!room) return;
-      if (room.players.length >= room.maxPlayers) return showToast("Otaqda boş yer yoxdur");
-      if (!room.players.includes(friendId)) { room.players.push(friendId); saveState(); showToast("Dost əlavə edildi"); }
     }
 
     function saveProfileChanges() {
       const me = getCurrentUser();
       if (!me) return;
       me.city = document.getElementById("profCity").value;
-      if (tempPhotoData) { me.photo = tempPhotoData; tempPhotoData = null; }
-      saveState(); showToast("Profil yadda saxlandı");
+      saveState();
+      showToast("Yadda saxlandı");
+    }
+
+    function renderWebArena() {
+      const me = getCurrentUser(), room = getMyRoom();
+      if (!me || !room) return;
+
+      const nodesLayer = document.getElementById("webNodesLayer");
+      const svg = document.getElementById("webSvg");
+      svg.querySelectorAll(".dynamic-arrow").forEach(el => el.remove());
+
+      const cx = 260, cy = 155, r = 108;
+      const coords = {};
+
+      nodesLayer.innerHTML = room.players.map((pid, i) => {
+        const u = getUserById(pid);
+        if (!u) return "";
+        const angle = (2 * Math.PI * i) / Math.max(room.players.length, 1) - Math.PI / 2;
+        const px = cx + r * Math.cos(angle);
+        const py = cy + r * Math.sin(angle);
+        coords[pid] = { x: px, y: py };
+
+        const pctX = (px / 520) * 100;
+        const pctY = (py / 310) * 100;
+        const selectedTarget = document.getElementById("opponentSelect")?.value;
+        const isMe = u.id === me.id;
+        const isTarget = u.id === selectedTarget || u.id === room.callInfo?.targetId;
+
+        return `
+          <div class="web-node ${isMe ? "is-me" : ""} ${isTarget ? "is-target" : ""}" style="left:${pctX}%; top:${pctY}%;">
+            <div class="web-dot"></div>
+            <div class="web-label">${u.avatar || "🕸️"} ${u.nick}</div>
+            <div class="web-sub">${u.score || 0} xal · ❤️${u.lives ?? 3}</div>
+          </div>
+        `;
+      }).join("");
+
+      const fromId = room.callInfo?.callerId || me.id;
+      const toId = room.callInfo?.targetId || document.getElementById("opponentSelect")?.value;
+      if (fromId && toId && coords[fromId] && coords[toId] && fromId !== toId) {
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("class", "dynamic-arrow");
+        line.setAttribute("x1", coords[fromId].x);
+        line.setAttribute("y1", coords[fromId].y);
+        line.setAttribute("x2", coords[toId].x);
+        line.setAttribute("y2", coords[toId].y);
+        line.setAttribute("stroke", "#facc15");
+        line.setAttribute("stroke-width", "2.5");
+        line.setAttribute("marker-end", "url(#arrowHead)");
+        svg.appendChild(line);
+      }
     }
 
     function renderAll() {
@@ -511,91 +852,123 @@
       document.getElementById("mainNav").classList.toggle("hidden", !me);
 
       if (!me) {
-        document.getElementById("statusSub").textContent = "Qeydiyyat və ya giriş gözlənilir";
+        document.getElementById("statusSub").textContent = "Qeydiyyat gözlənilir";
         document.getElementById("headerRight").innerHTML = "";
         return;
       }
 
-      document.getElementById("statusSub").textContent = `${me.nick} · ${me.city} · ${me.score || 0} xal · ❤️ ${me.lives ?? 3} can`;
+      document.getElementById("statusSub").textContent = `${me.nick} · ${me.city} · ${me.score || 0} xal`;
       document.getElementById("headerRight").innerHTML = `<span class="badge ok">${me.nick}</span>`;
 
-      const myRoom = getMyRoom();
-      document.getElementById("roomLobbyCard").classList.toggle("hidden", !!myRoom);
-      document.getElementById("activeRoomCard").classList.toggle("hidden", !myRoom);
+      const room = getMyRoom();
+      document.getElementById("roomLobbyCard").classList.toggle("hidden", !!room);
+      document.getElementById("activeRoomCard").classList.toggle("hidden", !room);
 
-      if (!myRoom) {
-        const openRooms = state.rooms.filter(r => r.type === "open");
-        document.getElementById("openRoomsList").innerHTML = openRooms.length
-          ? openRooms.map(r => `<div class="item-card"><div><div style="font-weight:700">${r.name} (#${r.id})</div><div class="subtitle">Oyunçu: ${r.players.length}/${r.maxPlayers}</div></div><button class="btn sm" onclick="joinRoomById('${r.id}')">Qoşul</button></div>`).join("")
-          : `<div class="subtitle">Açıq otaq yoxdur</div>`;
+      if (!room) {
+        document.getElementById("openRoomsList").innerHTML = state.rooms.filter(r => r.type === "open").map(r => `
+          <div class="item-card">
+            <div><div style="font-weight:700">${r.name} (#${r.id})</div><div class="subtitle">${r.players.length}/${r.maxPlayers} oyunçu</div></div>
+            <button class="btn sm" onclick="joinRoomById('${r.id}')">Qoşul</button>
+          </div>
+        `).join("");
       } else {
-        const aliveCount = myRoom.players.filter(id => (getUserById(id)?.lives ?? 3) > 0).length;
-        document.getElementById("roomHeaderTitle").textContent = `${myRoom.name} (#${myRoom.id})`;
-        document.getElementById("roomHeaderMeta").textContent = `Aktiv oyunçu: ${aliveCount}/${myRoom.maxPlayers}`;
+        const pCount = room.players.length;
+        const canStart = pCount >= 3 && pCount <= 5;
+        document.getElementById("roomHeaderTitle").textContent = `${room.name} (#${room.id})`;
+        document.getElementById("roomHeaderMeta").textContent = `Oyunçu sayı: ${pCount}/5 (3–5 arası)`;
+        document.getElementById("minPlayersNotice").textContent = canStart
+          ? `Oyunçu sayı uyğundur (${pCount} nəfər) — duelə çağıra bilərsiniz.`
+          : `Oyunun başlaması üçün ən az 3 oyunçu lazımdır (hazırda ${pCount}).`;
 
-        document.getElementById("roomPlayersList").innerHTML = myRoom.players.map(pid => {
-          const u = getUserById(pid); if (!u) return "";
-          const isMe = u.id === me.id;
-          return `<div class="item-card ${isMe ? "selected" : ""}"><div class="row"><div class="avatar-box">${getAvatarHtml(u)}</div><div><div style="font-weight:700">${u.nick}${isMe ? " (Sən)" : ""}</div><div class="subtitle">${u.score || 0} xal</div></div></div><span class="badge ${(u.lives ?? 3) > 0 ? "ok" : "warn"}">❤️ ${u.lives ?? 3} can</span></div>`;
-        }).join("");
+        const opps = room.players.map(getUserById).filter(u => u && u.id !== me.id && (u.lives ?? 3) > 0);
+        const sel = document.getElementById("opponentSelect");
+        const prevVal = sel.value;
+        sel.innerHTML = opps.length
+          ? opps.map(op => `<option value="${op.id}">${op.nick} (❤️ ${op.lives ?? 3})</option>`).join("")
+          : `<option value="">Rəqib yoxdur</option>`;
+        if (opps.some(o => o.id === prevVal)) sel.value = prevVal;
+        document.getElementById("callDuelBtn").disabled = !canStart || !opps.length;
 
-        const invitable = (state.friendships[me.id] || []).filter(fid => !myRoom.players.includes(fid));
-        document.getElementById("inviteFriendBox").classList.toggle("hidden", myRoom.players.length >= myRoom.maxPlayers || !invitable.length);
-        document.getElementById("roomInviteFriendsList").innerHTML = invitable.map(fid => {
-          const f = getUserById(fid);
-          return f ? `<div class="item-card"><span>${f.nick}</span><button class="btn sm secondary" onclick="inviteFriendToRoom('${f.id}')">Çağır</button></div>` : "";
-        }).join("");
+        const lives = Math.max(0, Math.min(3, me.lives ?? 3));
+        document.getElementById("myHeartsRow").innerHTML = [1, 2, 3].map(i =>
+          `<span class="heart ${i > lives ? "lost" : ""}">❤️</span>`
+        ).join("");
 
-        const banner = document.getElementById("inviteBanner");
-        banner.classList.toggle("hidden", !myRoom.inviteBanner);
-        if (myRoom.inviteBanner) document.getElementById("inviteBannerText").textContent = myRoom.inviteBanner;
+        const banner = document.getElementById("callBanner");
+        if (room.callInfo && canStart) {
+          const a = getUserById(room.callInfo.callerId);
+          const b = getUserById(room.callInfo.targetId);
+          banner.textContent = `${a?.nick || "A"} duelə ${b?.nick || "B"}-ni çağırdı`;
+          banner.classList.remove("hidden");
+        } else {
+          banner.classList.add("hidden");
+        }
 
-        const locked = !!myRoom.lockedOpponentFor[me.id];
-        const opponents = myRoom.players.map(getUserById).filter(u => u && u.id !== me.id && (u.lives ?? 3) > 0);
-        document.getElementById("openOpponentsList").innerHTML = opponents.length
-          ? opponents.map(op => `<div class="item-card selectable ${selectedOpponentId === op.id ? "selected" : ""}" onclick="${locked ? "" : `selectOpponent('${op.id}')`}"><div class="row"><div class="avatar-box">${getAvatarHtml(op)}</div><span style="font-weight:700">${op.nick}</span></div><span class="badge">${op.score || 0} xal</span></div>`).join("")
-          : `<div class="subtitle">Seçilə biləcək rəqib yoxdur</div>`;
+        renderWebArena();
 
-        const confirmBtn = document.getElementById("confirmDuelBtn");
-        confirmBtn.disabled = locked || !selectedOpponentId;
-        confirmBtn.textContent = locked ? "Seçim Təsdiqləndi" : "Seçimi Təsdiqlə";
+        const modal = document.getElementById("questionModal");
+        modal.classList.toggle("hidden", !room.duel);
+        if (room.duel) {
+          const d = room.duel;
+          const p1 = getUserById(d.p1Id);
+          const p2 = getUserById(d.p2Id);
+          const ord = ORDINALS[d.round - 1] || `${d.round}-ci`;
 
-        const duelBox = document.getElementById("activeDuelBox");
-        duelBox.classList.toggle("hidden", !myRoom.activeDuel);
-        if (myRoom.activeDuel) {
-          const p1 = getUserById(myRoom.activeDuel.p1), p2 = getUserById(myRoom.activeDuel.p2), q = myRoom.activeDuel.question;
-          document.getElementById("duelMatchupTitle").textContent = `${p1?.nick || "?"} vs ${p2?.nick || "?"}`;
-          document.getElementById("duelQuestionMeta").textContent = `Baza: ${questionBank.length} sual`;
-          document.getElementById("duelCategoryBadge").textContent = q.cat || "Ümumi";
-          document.getElementById("duelQuestionText").textContent = q.q;
-          document.getElementById("connBadge").textContent = myRoom.activeDuel.disconnectedUserId ? "Bağlantı: Qırılıb" : "Bağlantı: Aktiv";
-          document.getElementById("duelOptionsGrid").innerHTML = (q.opts || []).map((opt, i) => `<button class="btn secondary" onclick="answerDuelOption(${i})">${opt}</button>`).join("");
+          document.getElementById("modalRoundHeader").textContent = `Duelin ${ord} sualı`;
+          document.getElementById("modalScoreHeader").textContent = `Hesab: ${p1?.nick || "A"} ${d.score1}–${d.score2} ${p2?.nick || "B"}`;
+          document.getElementById("modalTimer").textContent = `${d.timeLeft}s`;
+          document.getElementById("modalQuestionText").textContent = d.question.q;
+
+          const myChoice = d.answers[me.id];
+          document.getElementById("modalOptionsGrid").innerHTML = d.question.opts.map((opt, idx) => {
+            let cls = "ans-btn";
+            if (d.finishedRound) {
+              if (idx === d.question.ans) cls += " correct";
+              else if (idx === myChoice) cls += " wrong";
+            } else if (idx === myChoice) {
+              cls += " selected";
+            }
+            return `<button class="${cls}" ${myChoice !== undefined || d.finishedRound ? "disabled" : ""} onclick="submitQuestionAnswer(${idx})">${opt}</button>`;
+          }).join("");
+
+          const reviewBox = document.getElementById("modalReviewBox");
+          if (d.finishedRound) {
+            const p1Ans = d.answers[d.p1Id];
+            const p2Ans = d.answers[d.p2Id];
+            const rightText = d.question.opts[d.question.ans];
+            reviewBox.classList.remove("hidden");
+            reviewBox.innerHTML = `
+              <div>Düzgün cavab: <span class="c-green">${rightText}</span></div>
+              <div>${p1?.nick || "A"}: <span class="${p1Ans === d.question.ans ? "c-green" : "c-red"}">${p1Ans !== undefined ? d.question.opts[p1Ans] : "Cavab vermədi"}</span></div>
+              <div>${p2?.nick || "B"}: <span class="${p2Ans === d.question.ans ? "c-green" : "c-red"}">${p2Ans !== undefined ? d.question.opts[p2Ans] : "Cavab vermədi"}</span></div>
+            `;
+          } else {
+            reviewBox.classList.add("hidden");
+          }
         }
       }
 
-      const incoming = state.friendRequests.filter(r => r.to === me.id);
-      document.getElementById("incomingRequestsList").innerHTML = incoming.length
-        ? incoming.map(r => `<div class="item-card"><span>${getUserById(r.from)?.nick || r.from}</span><button class="btn sm success" onclick="acceptFriendRequest('${r.id}')">Qəbul et</button></div>`).join("")
-        : `<div class="subtitle">Yeni təklif yoxdur</div>`;
+      const inc = state.friendRequests.filter(r => r.to === me.id);
+      document.getElementById("incomingRequestsList").innerHTML = inc.length
+        ? inc.map(r => `<div class="item-card"><span>${getUserById(r.from)?.nick || r.from}</span><button class="btn sm success" onclick="acceptFriendRequest('${r.id}')">Qəbul</button></div>`).join("")
+        : `<div class="subtitle">Təklif yoxdur</div>`;
 
       const friends = state.friendships[me.id] || [];
       document.getElementById("friendsList").innerHTML = friends.length
-        ? friends.map(fid => { const f = getUserById(fid); return f ? `<div class="item-card"><span>${f.nick} (${f.city})</span><span class="badge ok">${f.score || 0} xal</span></div>` : ""; }).join("")
-        : `<div class="subtitle">Dost siyahısı boşdur</div>`;
+        ? friends.map(fid => `<div class="item-card"><span>${getUserById(fid)?.nick || fid}</span><span class="badge ok">${getUserById(fid)?.score || 0} xal</span></div>`).join("")
+        : `<div class="subtitle">Dost yoxdur</div>`;
 
       const sorted = [...state.users].sort((a, b) => (b.score || 0) - (a.score || 0));
-      document.getElementById("rankingList").innerHTML = sorted.length
-        ? sorted.map((u, i) => `<div class="item-card"><span>#${i + 1} ${u.nick} (${u.city})</span><span class="badge ok">${u.score || 0} xal</span></div>`).join("")
-        : `<div class="subtitle">İstifadəçi yoxdur</div>`;
+      document.getElementById("rankingList").innerHTML = sorted.map((u, i) =>
+        `<div class="item-card"><span>#${i + 1} ${u.nick}</span><span class="badge ok">${u.score || 0} xal</span></div>`
+      ).join("");
 
-      document.getElementById("profAvatarPreview").innerHTML = getAvatarHtml(me);
       document.getElementById("profNickText").textContent = me.nick;
       document.getElementById("profMetaText").textContent = `${me.email} · ${me.city}`;
       document.getElementById("profCity").value = me.city || "Bakı";
     }
 
     initAvatarPicker();
-    loadQuestionBank();
     renderAll();
   </script>
 </body>
