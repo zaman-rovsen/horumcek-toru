@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hörümçək Toru</title>
+  <title>Hörümçək Toru · By Rovshan Zaman</title>
   <meta name="theme-color" content="#090e1a" />
   <style>
     :root {
@@ -24,6 +24,7 @@
     .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px; }
     .top-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
     .title { font-size: 19px; font-weight: 800; }
+    .byline { font-size: 11px; color: #93c5fd; font-weight: 700; margin-top: 2px; }
     .subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
     .nav-tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
     .tab-btn { background: var(--card-2); color: var(--muted); border: 1px solid var(--line); border-radius: 10px; padding: 8px 3px; font-size: 11px; font-weight: 700; cursor: pointer; }
@@ -46,6 +47,17 @@
     .item-card { background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: 9px 11px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
     .badge { font-size: 11px; padding: 3px 8px; border-radius: 999px; background: var(--card-2); border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
     .badge.ok { color: #86efac; border-color: #166534; }
+    .badge.lock { color: #fde047; border-color: #a16207; }
+
+    .install-box {
+      background: rgba(59, 130, 246, .12);
+      border: 1px solid #3b82f6;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      font-size: 12px;
+      line-height: 1.45;
+    }
 
     .rules-list { display: flex; flex-direction: column; gap: 8px; font-size: 13px; line-height: 1.45; }
     .rule-item { background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: 10px 12px; }
@@ -265,6 +277,7 @@
     <div class="card top-bar">
       <div>
         <div class="title">🕸️ Hörümçək Toru</div>
+        <div class="byline">By Rovshan Zaman</div>
         <div class="subtitle" id="statusSub">Qeydiyyat gözlənilir</div>
       </div>
       <div id="headerRight"></div>
@@ -280,6 +293,9 @@
 
     <!-- QEYDİYYAT -->
     <div class="card" id="authView">
+      <div class="install-box">
+        <b>📲 Telefona tətbiq kimi əlavə et:</b> Linki açıb brauzer menyusundan <b>"Ana ekrana əlavə et"</b> (<i>Add to Home Screen</i>) seçin ki, tətbiq kimi rahat açılsın.
+      </div>
       <div class="sec-title">Profil Yaradılması</div>
       <div class="field">
         <label>Ləqəb</label>
@@ -319,7 +335,27 @@
     <!-- TOR & DUEL -->
     <div id="tab-room" class="hidden">
       <div class="card" id="roomLobbyCard">
-        <div class="sec-title">Otaq Yarat və ya Qoşul</div>
+        <div class="install-box">
+          <b>📲 Tətbiqi yüklə / Ana ekrana sal:</b> Telefon brauzerində <b>"Ana ekrana əlavə et"</b> seçin, sonra aşağıdan <b>Sərbəst Otaq</b> və ya <b>Kilidli Otaq</b> seçib <b>Otaq Kodu</b> ilə qoşulun.
+          <div class="row" style="margin-top:8px">
+            <button class="btn secondary sm" type="button" onclick="showInstallGuide()">Tətbiqi yükləmə qaydası</button>
+          </div>
+        </div>
+
+        <!-- OTAQ KODU İLƏ ORTAQ OTAĞA GİRİŞ FORMU -->
+        <div class="sec-title">🔑 Otaq Kodu ilə Ortaq Otağa Gir</div>
+        <div class="field">
+          <label>Otaq Kodu</label>
+          <input type="text" id="joinCodeInput" placeholder="Məsələn: 101 və ya 202" maxlength="10" />
+        </div>
+        <div class="field">
+          <label>Kilidli otaqdırsa Şifrə (sərbəst otaqda boş qala bilər)</label>
+          <input type="password" id="joinCodePass" placeholder="Şifrə (əgər kilidlidirsə)" maxlength="20" />
+        </div>
+        <button class="btn" style="width:100%; margin-bottom:14px" onclick="joinRoomByCodeForm()">Kodla Ortaq Otağa Gir</button>
+
+        <!-- SƏRBƏST VƏ KİLİDLİ OTAQ YARATMA FORMU -->
+        <div class="sec-title">Yeni Sərbəst və ya Kilidli Otaq Yarat</div>
         <div class="field">
           <label>Otağın adı</label>
           <input type="text" id="newRoomName" placeholder="Otaq adını yazın" maxlength="25" />
@@ -327,25 +363,27 @@
         <div class="field">
           <label>Otaq növü</label>
           <select id="newRoomType" onchange="toggleRoomPassInput()">
-            <option value="open">Açıq otaq</option>
-            <option value="private">Şifrəli otaq</option>
+            <option value="open">Sərbəst otaq (açıq)</option>
+            <option value="private">Kilidli otaq (şifrəli + kodlu)</option>
           </select>
         </div>
-        <div id="newRoomPassField" class="field hidden">
-          <label>Şifrə</label>
-          <input type="password" id="newRoomPass" placeholder="Şifrə" maxlength="20" />
+        <div class="field">
+          <label>Xüsusi Otaq Kodu (boş buraxılsa avtomatik yaranır)</label>
+          <input type="text" id="newRoomCode" placeholder="Məsələn: 555" maxlength="10" />
         </div>
-        <button class="btn success" style="width:100%; margin-bottom:12px" onclick="createRoom()">Otaq Yarat</button>
+        <div id="newRoomPassField" class="field hidden">
+          <label>Kilid Şifrəsi</label>
+          <input type="password" id="newRoomPass" placeholder="Kilid şifrəsini yazın" maxlength="20" />
+        </div>
+        <button class="btn success" style="width:100%; margin-bottom:14px" onclick="createRoom()">Otaq Yarat</button>
 
-        <div class="sec-title">Açıq Otaqlar</div>
+        <!-- SƏRBƏST OTAQLAR -->
+        <div class="sec-title">🟢 Sərbəst Otaqlar</div>
         <div class="list" id="openRoomsList" style="margin-bottom:12px"></div>
 
-        <div class="sec-title">Şifrəli Otağa Qoşul</div>
-        <div class="row">
-          <input type="text" id="joinRoomId" placeholder="ID" style="flex:1" />
-          <input type="password" id="joinRoomPass" placeholder="Şifrə" style="flex:1" />
-          <button class="btn" onclick="joinPrivateRoom()">Qoşul</button>
-        </div>
+        <!-- KİLİDLİ OTAQLAR -->
+        <div class="sec-title">🔒 Kilidli Otaqlar</div>
+        <div class="list" id="lockedRoomsList"></div>
       </div>
 
       <!-- AKTİV OTAQ: YUXARIDA DAİRƏVİ TOR, AŞAĞIDA AÇIQ ALT-ALTA SEÇİM + 3 CAN -->
@@ -389,7 +427,7 @@
             <div class="hearts-row" id="myHeartsRow" title="Canlar"></div>
           </div>
           <div class="subtitle" style="margin-top:8px">
-            Baza: 100 sual (Asan / Orta / Çətin) · 3: 3,1,0 · 4: 4,2,0,-1 · 5: 5,3,1,0,-1
+            By Rovshan Zaman · 100 sual · 3: 3,1,0 · 4: 4,2,0,-1 · 5: 5,3,1,0,-1
           </div>
         </div>
       </div>
@@ -399,6 +437,7 @@
     <div class="card hidden" id="tab-rules">
       <div class="sec-title">Oyun Qaydaları</div>
       <div class="rules-list">
+        <div class="rule-item"><b>Sərbəst və Kilidli otaqlar:</b> Sərbəst otaqlara kodsuz girmək olur, kilidli otaqlara isə <b>Otaq Kodu</b> və şifrə ilə daxil olunur.</div>
         <div class="rule-item"><b>Oyunçu sayı:</b> Oyunun başlaması üçün otaqda ən az <b>3</b> oyunçu olmalıdır (<b>3, 4 və ya 5</b> oyunçu ilə oynanılır). 3 nəfərdən az olduqda oyun başlamır.</div>
         <div class="rule-item"><b>Dövrlər və yenidən seçim:</b> Bir dövr bitdikdən sonra növbəti dövr üçün yenidən rəqib seçilir. Xal hər dövrdə yox, <b>tam oyun bitəndə</b> səpələnir.</div>
         <div class="rule-item"><b>Tor və çağırış:</b> Yuxarıda oyunçular dairə ətrafında yerləşir, rəqib seçilib çağırılanda ikisini oxlu xətt birləşdirir və <i>"A duelə B-ni çağırdı"</i> bildirişi görünür, ardınca <b>5 - 4 - 3 - 2 - 1 Başladıq!</b> geri sayımı gedir.</div>
@@ -475,12 +514,10 @@
 
   <script>
     const AVATARS = ["🕸️", "🦁", "🦅", "🐺", "🦊", "🐉"];
-    const STORAGE_KEY = "horumcek_toru_v10_state";
+    const STORAGE_KEY = "horumcek_toru_v13_state";
     const channel = ("BroadcastChannel" in window) ? new BroadcastChannel("horumcek_toru_channel") : null;
 
-    // 100 SUAL: Asan (1-34), Orta (35-67), Çətin (68-100)
     const QUESTIONS = [
-      // ASAN (1-34)
       { id: 1, lvl: "Asan", q: "Azərbaycanın paytaxtı hansı şəhərdir?", opts: ["Bakı", "Gəncə", "Şəki", "Quba"], ans: 0 },
       { id: 2, lvl: "Asan", q: "Bir ildə neçə ay var?", opts: ["12", "10", "7", "24"], ans: 0 },
       { id: 3, lvl: "Asan", q: "HTML nə üçün istifadə olunur?", opts: ["Veb səhifə quruluşu", "Şəkil çəkmək", "Səs yazmaq", "Video montaj"], ans: 0 },
@@ -516,7 +553,6 @@
       { id: 33, lvl: "Asan", q: "Qış yuxusuna gedən heyvan hansıdır?", opts: ["Ayı", "Qartal", "Delfin", "Tülkü"], ans: 0 },
       { id: 34, lvl: "Asan", q: "Səs ən sürətli harada yayılır?", opts: ["Bərk cisimdə", "Havada", "Vakuumda", "Qazda"], ans: 0 },
 
-      // ORTA (35-67)
       { id: 35, lvl: "Orta", q: "Azərbaycan Xalq Cümhuriyyəti nə vaxt qurulub?", opts: ["28 may 1918", "28 aprel 1920", "18 oktyabr 1991", "12 noyabr 1995"], ans: 0 },
       { id: 36, lvl: "Orta", q: "2, 6, 12, 20, 30 ardıcıllığında növbəti ədəd hansıdır?", opts: ["42", "36", "40", "48"], ans: 0 },
       { id: 37, lvl: "Orta", q: "Python-da siyahının sonuna element əlavə edən metod hansıdır?", opts: ["append()", "push()", "insert()", "add()"], ans: 0 },
@@ -551,16 +587,15 @@
       { id: 66, lvl: "Orta", q: "Suyun normal atmosfer təzyiqində qaynama temperaturu neçədir?", opts: ["100°C", "0°C", "90°C", "120°C"], ans: 0 },
       { id: 67, lvl: "Orta", q: "Corc Oruellin satirik əsəri hansıdır?", opts: ["Heyvanıstan", "Balaca şahzadə", "Buratino", "Ovod"], ans: 0 },
 
-      // ÇƏTİN (68-100)
       { id: 68, lvl: "Çətin", q: "İkili axtarışın (Binary Search) ən pis halda zaman mürəkkəbliyi nədir?", opts: ["O(log n)", "O(n)", "O(n log n)", "O(1)"], ans: 0 },
       { id: 69, lvl: "Çətin", q: "Gəncə qalası neçənci əsrdə inşa edilmişdir?", opts: ["XVI əsr", "XII əsr", "XIX əsr", "X əsr"], ans: 0 },
       { id: 70, lvl: "Çətin", q: "x² - 5x + 6 = 0 tənliyinin köklərinin cəmi neçədir?", opts: ["5", "6", "-5", "-6"], ans: 0 },
       { id: 71, lvl: "Çətin", q: "TCP və UDP protokolları OSI modelinin hansı səviyyəsində işləyir?", opts: ["Nəqliyyat (Transport)", "Şəbəkə (Network)", "Fiziki (Physical)", "Tətbiq (Application)"], ans: 0 },
-      { id: 72, lvl: "Çətin", q: "Cədvəl (Mendeleyev) sistemində 79-cu element hansıdır?", opts: ["Qızıl (Au)", "Gümüş (Ag)", "Platin (Pt)", "Civə (Hg)"], ans: 0 },
+      { id: 72, lvl: "Çətin", q: "Mendeleyev sistemində 79-cu element hansıdır?", opts: ["Qızıl (Au)", "Gümüş (Ag)", "Platin (Pt)", "Civə (Hg)"], ans: 0 },
       { id: 73, lvl: "Çətin", q: "Atropatena dövlətinin paytaxtı harada yerləşirdi?", opts: ["Qazaka (Qazançı)", "Qəbələ", "Bərdə", "Şamaxı"], ans: 0 },
       { id: 74, lvl: "Çətin", q: "5! (5 faktorial) ədədinin qiyməti neçədir?", opts: ["120", "60", "24", "720"], ans: 0 },
       { id: 75, lvl: "Çətin", q: "RSA şifrələmə alqoritmi hansı yanaşmaya əsaslanır?", opts: ["Asimmetrik açar və böyük ədədlərin vuruqlara ayrılması", "Simmetrik XOR", "Hash funksiyası", "Sezar sürüşdürməsi"], ans: 0 },
-      { id: 76, lvl: "Çətin", q: "Dünyanın ən dərin çökəkliyi olan Mariana çökəkliyi hansı okeandadır?", opts: ["Sakit okean", "Atlantik okean", "Hind okean", "Şimal Buzlu okean"], ans: 0 },
+      { id: 76, lvl: "Çətin", q: "Mariana çökəkliyi hansı okeandadır?", opts: ["Sakit okean", "Atlantik okean", "Hind okean", "Şimal Buzlu okean"], ans: 0 },
       { id: 77, lvl: "Çətin", q: "Fibonakki ardıcıllığında 8-ci hədd (1, 1, 2, 3, 5, 8, 13, ...) neçədir?", opts: ["21", "13", "34", "18"], ans: 0 },
       { id: 78, lvl: "Çətin", q: "Python-da tuple ilə list arasındakı əsas fərq nədir?", opts: ["Tuple dəyişməzdir (immutable)", "Tuple indeks dəstəkləmir", "List yalnız ədəd saxlayır", "Fərq yoxdur"], ans: 0 },
       { id: 79, lvl: "Çətin", q: "Eldənizlər dövlətinin əsasını kim qoyub?", opts: ["Şəmsəddin Eldəniz", "Qızıl Arslan", "Əbu Bəkr", "Cahan Pəhləvan"], ans: 0 },
@@ -571,16 +606,16 @@
       { id: 84, lvl: "Çətin", q: "SQL-də 'ACID' xassələrində 'I' hərfi nəyi ifadə edir?", opts: ["Isolation (Təcrid olunma)", "Index", "Integrity", "Input"], ans: 0 },
       { id: 85, lvl: "Çətin", q: "Nadir şah Əfşar tacqoyma mərasimi harada keçirilib?", opts: ["Muğan (Suqovuşan)", "Təbriz", "İsfahan", "Şiraz"], ans: 0 },
       { id: 86, lvl: "Çətin", q: "Düzbucaqlı üçbucağın katetləri 6 və 8-dirsə, hipotenuzu neçədir?", opts: ["10", "12", "14", "9"], ans: 0 },
-      { id: 87, lvl: "Çətin", q: "Deadlock (kilitlənmə) yaranması üçün zəruri şərtlərdən biri hansıdır?", opts: ["Hold and Wait (Saxla və Gözlə)", "Cache Miss", "Page Fault", "Context Switch"], ans: 0 },
+      { id: 87, lvl: "Çətin", q: "Deadlock yaranması üçün zəruri şərtlərdən biri hansıdır?", opts: ["Hold and Wait (Saxla və Gözlə)", "Cache Miss", "Page Fault", "Context Switch"], ans: 0 },
       { id: 88, lvl: "Çətin", q: "Kainatda ən çox yayılmış kimyəvi element hansıdır?", opts: ["Hidrogen", "Helium", "Oksigen", "Karbon"], ans: 0 },
-      { id: 89, lvl: "Çətin", q: "Ehtimal: zər atıldıqda cüt rəqəm düşmə ehtimalı nə qədərdir?", opts: ["1/2", "1/3", "1/6", "2/3"], ans: 0 },
+      { id: 89, lvl: "Çətin", q: "Zər atıldıqda cüt rəqəm düşmə ehtimalı nə qədərdir?", opts: ["1/2", "1/3", "1/6", "2/3"], ans: 0 },
       { id: 90, lvl: "Çətin", q: "DNS-də 'A' qeydi nəyi göstərir?", opts: ["Domeni IPv4 ünvanına bağlayır", "Poçt serverini", "Ad serverini", "Mətn qeydini"], ans: 0 },
       { id: 91, lvl: "Çətin", q: "Şirvanşahlar dövlətinin paytaxtlarından biri olmuş şəhər hansıdır?", opts: ["Bakı", "Gəncə", "Naxçıvan", "Şuşa"], ans: 0 },
       { id: 92, lvl: "Çətin", q: "sin(90°) qiyməti neçədir?", opts: ["1", "0", "-1", "0.5"], ans: 0 },
-      { id: 93, lvl: "Çətin", q: "Stack məlumat strukturunun iş prinsipi hansıdır?", opts: ["LIFO (Son giren ilk çıkar)", "FIFO", "Random Access", "Priority"], ans: 0 },
+      { id: 93, lvl: "Çətin", q: "Stack məlumat strukturunun iş prinsipi hansıdır?", opts: ["LIFO", "FIFO", "Random Access", "Priority"], ans: 0 },
       { id: 94, lvl: "Çətin", q: "Termodinamikanın birinci qanunu nəyin saxlanmasını ifadə edir?", opts: ["Enerjinin", "Entropiyanın", "Temperaturun", "Kütlənin"], ans: 0 },
       { id: 95, lvl: "Çətin", q: "0-dan 9-a kimi rəqəmlərdən təkrarlanmadan 3 rəqəmli neçə ədəd düzəltmək olar?", opts: ["648", "720", "900", "504"], ans: 0 },
-      { id: 96, lvl: "Çətin", q: "TLS əl sıxışmasında (handshake) əsas məqsəd nədir?", opts: ["Şifrələnmiş bağlantı və identifikasiya qurmaq", "Fayl sıxmaq", "IP dəyişmək", "DNS keşləmək"], ans: 0 },
+      { id: 96, lvl: "Çətin", q: "TLS əl sıxışmasında əsas məqsəd nədir?", opts: ["Şifrələnmiş bağlantı və identifikasiya qurmaq", "Fayl sıxmaq", "IP dəyişmək", "DNS keşləmək"], ans: 0 },
       { id: 97, lvl: "Çətin", q: "Qafqaz Albaniyasının ilk məlum hökmdarı kim sayılır?", opts: ["Oroys", "Mömünə Xatun", "Babək", "Cavanşir"], ans: 0 },
       { id: 98, lvl: "Çətin", q: "16-lıq say sistemində 'FF' ədədi 10-luq sistemdə neçədir?", opts: ["255", "256", "155", "128"], ans: 0 },
       { id: 99, lvl: "Çətin", q: "Merkuri günəş ətrafında tam dövrü təxminən nə qədər müddətə vurur?", opts: ["88 Yer günü", "365 gün", "687 gün", "12 il"], ans: 0 },
@@ -607,9 +642,25 @@
       rooms: [
         {
           id: "101",
-          name: "Əsas Tor Otağı",
+          code: "101",
+          name: "Sərbəst Tor Otağı",
           type: "open",
           password: "",
+          maxPlayers: 5,
+          players: [],
+          cycleNumber: 1,
+          eliminatedOrder: [],
+          lastFinalWinnerId: null,
+          lastFinalLoserId: null,
+          callInfo: null,
+          duel: null
+        },
+        {
+          id: "202",
+          code: "202",
+          name: "Kilidli Tor Otağı",
+          type: "private",
+          password: "123",
           maxPlayers: 5,
           players: [],
           cycleNumber: 1,
@@ -650,12 +701,23 @@
       };
     }
 
+    window.addEventListener("storage", (ev) => {
+      if (ev.key === STORAGE_KEY) {
+        state = loadState();
+        renderAll();
+      }
+    });
+
     function showToast(msg) {
       const el = document.getElementById("toastBox");
       el.textContent = msg;
       el.style.display = "block";
       clearTimeout(el._t);
-      el._t = setTimeout(() => { el.style.display = "none"; }, 2500);
+      el._t = setTimeout(() => { el.style.display = "none"; }, 2600);
+    }
+
+    function showInstallGuide() {
+      showToast("Android: ⋮ -> 'Ana ekrana əlavə et' | iPhone: Paylaş -> 'Ana Ekrana Əlavə Et'");
     }
 
     const getCurrentUser = () => state.users.find(u => u.id === state.currentUserId) || null;
@@ -700,11 +762,7 @@
       state.users.push(u);
       state.currentUserId = u.id;
       if (!state.rooms.length) {
-        state.rooms.push({
-          id: "101", name: "Əsas Tor Otağı", type: "open", password: "",
-          maxPlayers: 5, players: [], cycleNumber: 1, eliminatedOrder: [],
-          lastFinalWinnerId: null, lastFinalLoserId: null, callInfo: null, duel: null
-        });
+        state.rooms = structuredClone(defaultState.rooms);
       }
       state.rooms[0].players.push(u.id);
       saveState();
@@ -725,38 +783,55 @@
       if (!me) return;
       const name = document.getElementById("newRoomName").value.trim() || "Tor Otağı";
       const type = document.getElementById("newRoomType").value;
+      const customCode = document.getElementById("newRoomCode").value.trim();
+      const code = customCode || String(Math.floor(100 + Math.random() * 900));
       const password = type === "private" ? document.getElementById("newRoomPass").value.trim() : "";
-      if (type === "private" && !password) return showToast("Şifrə yazın");
+      if (type === "private" && !password) return showToast("Kilidli otaq üçün şifrə yazın");
+      if (state.rooms.some(r => r.code === code || r.id === code)) return showToast("Bu otaq kodu artıq mövcuddur");
 
       leaveRoom(true);
       me.lives = 3;
       selectedOpponentId = null;
       state.rooms.push({
-        id: String(Math.floor(100 + Math.random() * 900)),
-        name, type, password, maxPlayers: 5, players: [me.id],
-        cycleNumber: 1, eliminatedOrder: [], lastFinalWinnerId: null, lastFinalLoserId: null,
-        callInfo: null, duel: null
+        id: code,
+        code,
+        name,
+        type,
+        password,
+        maxPlayers: 5,
+        players: [me.id],
+        cycleNumber: 1,
+        eliminatedOrder: [],
+        lastFinalWinnerId: null,
+        lastFinalLoserId: null,
+        callInfo: null,
+        duel: null
       });
       saveState();
+      showToast(`Otaq yaradıldı · Kod: ${code}`);
     }
 
-    function joinRoomById(id, pass = "") {
+    function joinRoomByCode(code, pass = "") {
       const me = getCurrentUser();
       if (!me) return;
-      const room = state.rooms.find(r => r.id === id);
-      if (!room) return showToast("Otaq tapılmadı");
-      if (room.type === "private" && room.password !== pass) return showToast("Şifrə yanlışdır");
-      if (room.players.length >= room.maxPlayers && !room.players.includes(me.id)) return showToast("Otaq doludur");
+      const room = state.rooms.find(r => r.code === code || r.id === code);
+      if (!room) return showToast("Bu kodla otaq tapılmadı");
+      if (room.type === "private" && room.password !== pass) return showToast("Kilid şifrəsi yanlışdır");
+      if (room.players.length >= room.maxPlayers && !room.players.includes(me.id)) return showToast("Otaq doludur (maksimum 5 oyunçu)");
 
       leaveRoom(true);
       me.lives = 3;
       selectedOpponentId = null;
       if (!room.players.includes(me.id)) room.players.push(me.id);
       saveState();
+      showToast(`Ortaq otağa daxil oldunuz · Kod: ${room.code}`);
     }
 
-    function joinPrivateRoom() {
-      joinRoomById(document.getElementById("joinRoomId").value.trim(), document.getElementById("joinRoomPass").value.trim());
+    function joinRoomByCodeForm() {
+      const code = document.getElementById("joinCodeInput").value.trim();
+      const pass = document.getElementById("joinCodePass").value.trim();
+      if (!code) return showToast("Otaq kodunu yazın");
+      joinRoomByCode(code, pass);
     }
 
     function leaveRoom(silent = false) {
@@ -1044,22 +1119,43 @@
       document.getElementById("activeRoomCard").classList.toggle("hidden", !room);
 
       if (!room) {
-        document.getElementById("openRoomsList").innerHTML = state.rooms.filter(r => r.type === "open").map(r => `
-          <div class="item-card">
-            <div><div style="font-weight:700">${r.name} (#${r.id})</div><div class="subtitle">${r.players.length}/${r.maxPlayers} oyunçu</div></div>
-            <button class="btn sm" onclick="joinRoomById('${r.id}')">Qoşul</button>
-          </div>
-        `).join("");
+        const openRooms = state.rooms.filter(r => r.type === "open");
+        const lockedRooms = state.rooms.filter(r => r.type === "private");
+
+        document.getElementById("openRoomsList").innerHTML = openRooms.length
+          ? openRooms.map(r => `
+              <div class="item-card">
+                <div>
+                  <div style="font-weight:700">${r.name} · Kod: <b>${r.code}</b></div>
+                  <div class="subtitle">${r.players.length}/${r.maxPlayers} oyunçu · Sərbəst otaq</div>
+                </div>
+                <button class="btn sm success" onclick="joinRoomByCode('${r.code}')">Gir</button>
+              </div>
+            `).join("")
+          : `<div class="subtitle">Sərbəst otaq yoxdur</div>`;
+
+        document.getElementById("lockedRoomsList").innerHTML = lockedRooms.length
+          ? lockedRooms.map(r => `
+              <div class="item-card">
+                <div>
+                  <div style="font-weight:700">🔒 ${r.name} · Kod: <b>${r.code}</b></div>
+                  <div class="subtitle">${r.players.length}/${r.maxPlayers} oyunçu · Kilidli otaq</div>
+                </div>
+                <span class="badge lock">Kod + Şifrə</span>
+              </div>
+            `).join("")
+          : `<div class="subtitle">Kilidli otaq yoxdur</div>`;
       } else {
         const pCount = room.players.length;
         const canStart = pCount >= 3 && pCount <= 5;
         const cyc = room.cycleNumber || 1;
-        document.getElementById("roomHeaderTitle").textContent = `${room.name} (#${room.id}) · ${cyc}-ci dövr`;
-        document.getElementById("roomHeaderMeta").textContent = `Oyunçu sayı: ${pCount}/5 (3–5 arası)`;
+        const lockLabel = room.type === "private" ? "Kilidli" : "Sərbəst";
+        document.getElementById("roomHeaderTitle").textContent = `${room.name} · Kod: ${room.code} (${lockLabel})`;
+        document.getElementById("roomHeaderMeta").textContent = `${cyc}-ci dövr · Oyunçu sayı: ${pCount}/5 (3–5 arası)`;
         document.getElementById("roundSelectTitle").textContent = `${cyc}-ci dövr · Rəqib Seç (Alt-alta)`;
         document.getElementById("minPlayersNotice").textContent = canStart
           ? `Oyunçu sayı uyğundur (${pCount} nəfər) — ${cyc}-ci dövr üçün rəqib seçib duelə çağıra bilərsiniz.`
-          : `Oyunun başlaması üçün ən az 3 oyunçu lazımdır (hazırda ${pCount}).`;
+          : `Oyunun başlaması üçün ən az 3 oyunçu lazımdır (hazırda ${pCount}). Ortaq otaq kodu: ${room.code}`;
 
         const opps = room.players.map(getUserById).filter(u => u && u.id !== me.id && (u.lives ?? 3) > 0);
         if (!selectedOpponentId && opps.length) selectedOpponentId = opps[0].id;
