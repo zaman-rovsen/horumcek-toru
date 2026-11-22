@@ -7,292 +7,48 @@
   <meta name="theme-color" content="#0b1020" />
   <style>
     :root {
-      --bg: #0b1020;
-      --card: #121a30;
-      --card-2: #182340;
-      --line: #28375e;
-      --text: #eef3ff;
-      --muted: #9fb0d6;
-      --accent: #3b82f6;
-      --accent-2: #22c55e;
-      --danger: #ef4444;
-      --warn: #f59e0b;
+      --bg: #0b1020; --card: #121a30; --card-2: #182340; --line: #28375e;
+      --text: #eef3ff; --muted: #9fb0d6; --accent: #3b82f6; --ok: #22c55e;
+      --danger: #ef4444; --warn: #f59e0b;
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 16px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .app {
-      width: 100%;
-      max-width: 560px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 16px;
-    }
-
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .title {
-      font-size: 20px;
-      font-weight: 800;
-    }
-
-    .subtitle {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .nav-tabs {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-    }
-
-    .tab-btn {
-      background: var(--card-2);
-      color: var(--muted);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 9px 6px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .tab-btn.active {
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
-    }
-
-    .section-title {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 12px;
-    }
-
-    label {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    input, select {
-      width: 100%;
-      background: var(--bg);
-      color: var(--text);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 14px;
-    }
-
-    .btn {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .btn:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
-
-    .btn.secondary {
-      background: var(--card-2);
-      border: 1px solid var(--line);
-      color: var(--text);
-    }
-
-    .btn.success {
-      background: var(--accent-2);
-      color: #06210f;
-    }
-
-    .btn.danger {
-      background: var(--danger);
-      color: #fff;
-    }
-
-    .row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .avatar-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 8px;
-      margin-top: 4px;
-    }
-
-    .avatar-opt {
-      background: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 8px 0;
-      text-align: center;
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    .avatar-opt.selected {
-      border-color: var(--accent);
-      background: var(--card-2);
-    }
-
-    .avatar-box {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: var(--card-2);
-      border: 1px solid var(--line);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-
-    .avatar-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .item-card {
-      background: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 10px 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .item-card.selectable {
-      cursor: pointer;
-    }
-
-    .item-card.selected {
-      border-color: var(--accent);
-      background: var(--card-2);
-    }
-
-    .badge {
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: var(--card-2);
-      border: 1px solid var(--line);
-      color: var(--muted);
-    }
-
-    .badge.ok {
-      color: #86efac;
-      border-color: #166534;
-    }
-
-    .badge.warn {
-      color: #fcd34d;
-      border-color: #92400e;
-    }
-
-    .invite-banner {
-      background: linear-gradient(135deg, #1d4ed8, #0f172a);
-      border: 1px solid #60a5fa;
-      border-radius: 14px;
-      padding: 16px;
-      text-align: center;
-    }
-
-    .invite-title {
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-
-    .q-box {
-      background: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 10px;
-    }
-
-    .opts-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #1e293b;
-      color: #fff;
-      border: 1px solid #475569;
-      padding: 10px 16px;
-      border-radius: 10px;
-      font-size: 13px;
-      z-index: 999;
-      display: none;
-    }
-
-    .hidden {
-      display: none !important;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 14px; display: flex; justify-content: center; }
+    .app { width: 100%; max-width: 560px; display: flex; flex-direction: column; gap: 12px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .title { font-size: 19px; font-weight: 800; }
+    .subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .nav-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .tab-btn { background: var(--card-2); color: var(--muted); border: 1px solid var(--line); border-radius: 10px; padding: 8px 4px; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .tab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .sec-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+    .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
+    label { font-size: 12px; color: var(--muted); }
+    input, select { width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; font-size: 14px; }
+    .btn { background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 9px 13px; font-size: 13px; font-weight: 700; cursor: pointer; }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+    .btn.secondary { background: var(--card-2); border: 1px solid var(--line); color: var(--text); }
+    .btn.success { background: var(--ok); color: #05200e; }
+    .btn.danger { background: var(--danger); color: #fff; }
+    .btn.sm { padding: 6px 10px; font-size: 12px; }
+    .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .avatar-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+    .avatar-opt { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 7px 0; text-align: center; font-size: 19px; cursor: pointer; }
+    .avatar-opt.selected { border-color: var(--accent); background: var(--card-2); }
+    .avatar-box { width: 38px; height: 38px; border-radius: 50%; background: var(--card-2); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 19px; overflow: hidden; flex-shrink: 0; }
+    .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
+    .list { display: flex; flex-direction: column; gap: 7px; }
+    .item-card { background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: 9px 11px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .item-card.selectable { cursor: pointer; }
+    .item-card.selected { border-color: var(--accent); background: var(--card-2); }
+    .badge { font-size: 11px; padding: 3px 8px; border-radius: 999px; background: var(--card-2); border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+    .badge.ok { color: #86efac; border-color: #166534; }
+    .badge.warn { color: #fcd34d; border-color: #92400e; }
+    .invite-banner { background: linear-gradient(135deg, #1d4ed8, #0f172a); border: 1px solid #60a5fa; border-radius: 12px; padding: 12px; text-align: center; }
+    .q-box { background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: 11px; margin-bottom: 8px; }
+    .opts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; border: 1px solid #475569; padding: 9px 15px; border-radius: 10px; font-size: 13px; z-index: 999; display: none; }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
@@ -302,7 +58,7 @@
         <div class="title">🕸️ Hörümçək Toru</div>
         <div class="subtitle" id="statusSub">Qeydiyyat və ya giriş gözlənilir</div>
       </div>
-      <div class="row" id="headerRight"></div>
+      <div id="headerRight"></div>
     </div>
 
     <div class="nav-tabs" id="mainNav">
@@ -312,15 +68,13 @@
       <button class="tab-btn" data-tab="profile" onclick="switchTab('profile')">Profil</button>
     </div>
 
-    <!-- QEYDİYYAT / GİRİŞ -->
+    <!-- QEYDİYYAT -->
     <div class="card" id="authView">
-      <div class="section-title">Qeydiyyat və Profil Yaradılması</div>
-
+      <div class="sec-title">Qeydiyyat və Profil Yaradılması</div>
       <div class="field">
         <label>Ləqəb (Nickname)</label>
         <input type="text" id="regNick" placeholder="Məsələn: rovshan_pro" maxlength="20" />
       </div>
-
       <div class="field">
         <label>E-poçt ünvanı</label>
         <div class="row">
@@ -328,7 +82,6 @@
           <button class="btn secondary" type="button" onclick="sendVerifyCode()">Kod göndər</button>
         </div>
       </div>
-
       <div id="verifyBox" class="field hidden">
         <label id="verifyHint">E-poçta göndərilən 4 rəqəmli kodu daxil et</label>
         <div class="row">
@@ -336,41 +89,32 @@
           <button class="btn success" type="button" onclick="confirmEmailCode()">Təsdiqlə</button>
         </div>
       </div>
-
       <div class="field">
         <label>Şəhər / Rayon</label>
         <select id="regCity">
           <option value="">Şəhər seçin</option>
-          <option value="Bakı">Bakı</option>
-          <option value="Gəncə">Gəncə</option>
-          <option value="Sumqayıt">Sumqayıt</option>
-          <option value="Quba">Quba</option>
-          <option value="Ucar">Ucar</option>
-          <option value="Şəki">Şəki</option>
-          <option value="Lənkəran">Lənkəran</option>
-          <option value="Digər">Digər</option>
+          <option value="Bakı">Bakı</option><option value="Gəncə">Gəncə</option>
+          <option value="Sumqayıt">Sumqayıt</option><option value="Quba">Quba</option>
+          <option value="Ucar">Ucar</option><option value="Şəki">Şəki</option>
+          <option value="Lənkəran">Lənkəran</option><option value="Digər">Digər</option>
         </select>
       </div>
-
       <div class="field">
         <label>Hazır Avatar seç və ya öz şəklini yüklə</label>
         <div class="avatar-grid" id="avatarPicker"></div>
-        <input type="file" id="regPhoto" accept="image/*" style="margin-top:8px" onchange="handlePhotoUpload(event, 'reg')" />
+        <input type="file" id="regPhoto" accept="image/*" style="margin-top:6px" onchange="handlePhotoUpload(event, 'reg')" />
       </div>
-
       <button class="btn" style="width:100%" onclick="completeRegistration()">Qeydiyyatı Tamamla</button>
     </div>
 
     <!-- OTAQ VƏ DUEL -->
     <div id="tab-room" class="hidden">
       <div class="card" id="roomLobbyCard">
-        <div class="section-title">Otaq Yarat və ya Qoşul</div>
-
+        <div class="sec-title">Otaq Yarat və ya Qoşul</div>
         <div class="field">
           <label>Yeni otağın adı</label>
           <input type="text" id="newRoomName" placeholder="Məsələn: Axşam Turniri" maxlength="25" />
         </div>
-
         <div class="field">
           <label>Otaq növü</label>
           <select id="newRoomType" onchange="toggleRoomPassInput()">
@@ -378,18 +122,16 @@
             <option value="private">Şifrəli otaq (yalnız şifrə ilə)</option>
           </select>
         </div>
-
         <div id="newRoomPassField" class="field hidden">
           <label>Otaq şifrəsi</label>
           <input type="password" id="newRoomPass" placeholder="Şifrə daxil edin" maxlength="20" />
         </div>
+        <button class="btn success" style="width:100%; margin-bottom:12px" onclick="createRoom()">Otaq Yarat</button>
 
-        <button class="btn success" style="width:100%; margin-bottom:14px" onclick="createRoom()">Otaq Yarat</button>
+        <div class="sec-title">Açıq Otaqlar</div>
+        <div class="list" id="openRoomsList" style="margin-bottom:12px"></div>
 
-        <div class="section-title">Açıq Otaqlar</div>
-        <div class="list" id="openRoomsList" style="margin-bottom:14px"></div>
-
-        <div class="section-title">Şifrəli Otağa Qoşul</div>
+        <div class="sec-title">Şifrəli Otağa Qoşul</div>
         <div class="row">
           <input type="text" id="joinRoomId" placeholder="Otaq ID" style="flex:1" />
           <input type="password" id="joinRoomPass" placeholder="Şifrə" style="flex:1" />
@@ -397,57 +139,53 @@
         </div>
       </div>
 
-      <div class="card hidden" id="activeRoomCard">
-        <div class="top-bar" style="margin-bottom:10px">
-          <div>
-            <div class="section-title" style="margin-bottom:2px" id="roomHeaderTitle">Otaq</div>
-            <div class="subtitle" id="roomHeaderMeta"></div>
+      <!-- AKTİV OTAQ: YUXARIDA TOR, AŞAĞIDA RƏQİB SEÇİMİ -->
+      <div id="activeRoomCard" class="hidden" style="display:flex; flex-direction:column; gap:12px;">
+        <div class="card">
+          <div class="top-bar" style="margin-bottom:8px">
+            <div>
+              <div class="sec-title" style="margin-bottom:1px" id="roomHeaderTitle">Otaq</div>
+              <div class="subtitle" id="roomHeaderMeta"></div>
+            </div>
+            <button class="btn danger sm" onclick="leaveRoom()">Otaqdan çıx</button>
           </div>
-          <button class="btn danger" onclick="leaveRoom()">Otaqdan çıx</button>
+
+          <div class="list" id="roomPlayersList"></div>
+
+          <div id="inviteFriendBox" class="hidden" style="margin-top:10px">
+            <div class="sec-title" style="font-size:13px; margin-bottom:5px">Boş Yerə Dost Çağır</div>
+            <div class="list" id="roomInviteFriendsList"></div>
+          </div>
+
+          <div id="inviteBanner" class="invite-banner hidden" style="margin-top:10px">
+            <div style="font-weight:800; font-size:15px" id="inviteBannerText"></div>
+            <div class="subtitle">Duel açılır...</div>
+          </div>
         </div>
 
-        <div class="list" id="roomPlayersList" style="margin-bottom:14px"></div>
-
-        <!-- Boş yerə dost çağırma -->
-        <div id="inviteFriendBox" class="hidden" style="margin-bottom:14px">
-          <div class="section-title">Boş Yerə Dost Çağır</div>
-          <div class="list" id="roomInviteFriendsList"></div>
-        </div>
-
-        <!-- 5-6 saniyəlik dəvət bildiriş ekranı -->
-        <div id="inviteBanner" class="invite-banner hidden" style="margin-bottom:14px">
-          <div class="invite-title" id="inviteBannerText"></div>
-          <div class="subtitle" id="inviteCountdownText">Duel açılır...</div>
-        </div>
-
-        <!-- Açıq rəqib seçimi (geri qaytarılmır) -->
-        <div id="opponentSelectBox">
-          <div class="section-title">Rəqibini Seç (Açıq Siyahı)</div>
-          <div class="subtitle" style="margin-bottom:8px">Diqqət: Duel seçimi təsdiqləndikdən sonra ləğv edilə bilməz.</div>
+        <div class="card" id="opponentSelectBox">
+          <div class="sec-title" style="margin-bottom:2px">Rəqibini Seç</div>
+          <div class="subtitle" style="margin-bottom:8px">Seçim təsdiqləndikdən sonra ləğv edilə bilməz.</div>
           <div class="list" id="openOpponentsList" style="margin-bottom:10px"></div>
           <button class="btn" id="confirmDuelBtn" style="width:100%" disabled onclick="confirmDuelSelection()">Seçimi Təsdiqlə</button>
         </div>
 
-        <!-- Aktiv Duel + Sual Baza Dəstəyi + İnternet Qırılması -->
-        <div id="activeDuelBox" class="hidden" style="margin-top:12px">
-          <div class="item-card" style="margin-bottom:10px">
+        <div class="card hidden" id="activeDuelBox">
+          <div class="item-card" style="margin-bottom:8px">
             <div>
               <div style="font-weight:700" id="duelMatchupTitle">Duel gedir</div>
               <div class="subtitle" id="duelQuestionMeta">Baza: yüklənir</div>
             </div>
             <span class="badge warn" id="connBadge">Bağlantı: Aktiv</span>
           </div>
-
           <div class="q-box">
             <div class="subtitle" id="duelCategoryBadge">Kateqoriya</div>
-            <div style="font-weight:700; font-size:15px; margin-top:4px" id="duelQuestionText">Sual yüklənir...</div>
+            <div style="font-weight:700; font-size:15px; margin-top:3px" id="duelQuestionText">Sual yüklənir...</div>
           </div>
-
           <div class="opts-grid" id="duelOptionsGrid"></div>
-
           <div class="row" style="margin-top:8px">
-            <button class="btn danger" style="flex:1" onclick="simulateOpponentDisconnect()">Rəqibin İnterneti Kəsildi</button>
-            <button class="btn secondary" style="flex:1" onclick="simulateOpponentReconnect()">Rəqib Geri Qayıtdı (-1 can)</button>
+            <button class="btn danger sm" style="flex:1" onclick="simulateOpponentDisconnect()">Rəqibin İnterneti Kəsildi</button>
+            <button class="btn secondary sm" style="flex:1" onclick="simulateOpponentReconnect()">Rəqib Geri Qayıtdı (-1 can)</button>
           </div>
         </div>
       </div>
@@ -455,55 +193,46 @@
 
     <!-- DOSTLAR -->
     <div class="card hidden" id="tab-friends">
-      <div class="section-title">Dost Əlavə Et</div>
-      <div class="row" style="margin-bottom:14px">
+      <div class="sec-title">Dost Əlavə Et</div>
+      <div class="row" style="margin-bottom:12px">
         <input type="text" id="friendSearchNick" placeholder="Oyunçu ləqəbini yaz" style="flex:1" />
         <button class="btn" onclick="sendFriendRequest()">Təklif Göndər</button>
       </div>
-
-      <div class="section-title">Gələn Dost Təklifləri</div>
-      <div class="list" id="incomingRequestsList" style="margin-bottom:14px"></div>
-
-      <div class="section-title">Dost Siyahısı</div>
+      <div class="sec-title">Gələn Dost Təklifləri</div>
+      <div class="list" id="incomingRequestsList" style="margin-bottom:12px"></div>
+      <div class="sec-title">Dost Siyahısı</div>
       <div class="list" id="friendsList"></div>
     </div>
 
     <!-- REYTİNQ -->
     <div class="card hidden" id="tab-rank">
-      <div class="section-title">Ümumi Reytinq Cədvəli</div>
+      <div class="sec-title">Ümumi Reytinq Cədvəli</div>
       <div class="list" id="rankingList"></div>
     </div>
 
     <!-- PROFİL -->
     <div class="card hidden" id="tab-profile">
-      <div class="section-title">Profil Məlumatları</div>
-      <div class="row" style="margin-bottom:14px">
+      <div class="sec-title">Profil Məlumatları</div>
+      <div class="row" style="margin-bottom:12px">
         <div class="avatar-box" id="profAvatarPreview">🕸️</div>
         <div>
-          <div style="font-weight:800; font-size:16px" id="profNickText">-</div>
+          <div style="font-weight:800; font-size:15px" id="profNickText">-</div>
           <div class="subtitle" id="profMetaText">-</div>
         </div>
       </div>
-
       <div class="field">
         <label>Şəhəri dəyiş</label>
         <select id="profCity">
-          <option value="Bakı">Bakı</option>
-          <option value="Gəncə">Gəncə</option>
-          <option value="Sumqayıt">Sumqayıt</option>
-          <option value="Quba">Quba</option>
-          <option value="Ucar">Ucar</option>
-          <option value="Şəki">Şəki</option>
-          <option value="Lənkəran">Lənkəran</option>
-          <option value="Digər">Digər</option>
+          <option value="Bakı">Bakı</option><option value="Gəncə">Gəncə</option>
+          <option value="Sumqayıt">Sumqayıt</option><option value="Quba">Quba</option>
+          <option value="Ucar">Ucar</option><option value="Şəki">Şəki</option>
+          <option value="Lənkəran">Lənkəran</option><option value="Digər">Digər</option>
         </select>
       </div>
-
       <div class="field">
         <label>Yeni şəkil yüklə</label>
         <input type="file" accept="image/*" onchange="handlePhotoUpload(event, 'prof')" />
       </div>
-
       <button class="btn success" style="width:100%" onclick="saveProfileChanges()">Yadda Saxla</button>
     </div>
   </div>
@@ -515,7 +244,6 @@
     const STORAGE_KEY = "horumcek_toru_v3_state";
     const channel = ("BroadcastChannel" in window) ? new BroadcastChannel("horumcek_toru_channel") : null;
 
-    // 5000 suallıq xarici questions.json faylı varsa avtomatik çəkir, yoxdursa daxili suallarla işləyir
     const FALLBACK_QUESTIONS = [
       { id: 1, cat: "İnformatika", q: "HTML-də ən böyük başlıq teqi hansıdır?", opts: ["<h1>", "<h6>", "<head>", "<title>"], ans: 0 },
       { id: 2, cat: "Tarix", q: "Azərbaycan Xalq Cümhuriyyəti neçənci ildə yaradılıb?", opts: ["1918", "1920", "1991", "1905"], ans: 0 },
@@ -525,39 +253,13 @@
     ];
 
     let questionBank = [...FALLBACK_QUESTIONS];
-    let pendingEmailCode = null;
-    let emailVerified = false;
-    let tempPhotoData = null;
-    let selectedAvatar = AVATARS[0];
-    let selectedOpponentId = null;
-    let disconnectTimer = null;
+    let pendingEmailCode = null, emailVerified = false, tempPhotoData = null;
+    let selectedAvatar = AVATARS[0], selectedOpponentId = null;
 
     const defaultState = {
-      currentUserId: null,
-      usedQuestionIds: [],
-      users: [
-        { id: "u_nadir", nick: "nadir_tarix", email: "nadir@example.com", city: "Ucar", avatar: "🦅", photo: null, score: 140, wins: 5, lives: 3 },
-        { id: "u_elmeddin", nick: "elmeddin_mnt", email: "elmeddin@example.com", city: "Bakı", avatar: "🦁", photo: null, score: 110, wins: 4, lives: 3 },
-        { id: "u_aylin", nick: "aylin_q", email: "aylin@example.com", city: "Quba", avatar: "🦊", photo: null, score: 80, wins: 2, lives: 3 }
-      ],
-      rooms: [
-        {
-          id: "101",
-          name: "Açıq Tor Otağı",
-          type: "open",
-          password: "",
-          maxPlayers: 4,
-          players: ["u_nadir", "u_elmeddin"],
-          lockedOpponentFor: {},
-          activeDuel: null,
-          inviteBanner: null
-        }
-      ],
-      friendships: {
-        "u_nadir": ["u_elmeddin"],
-        "u_elmeddin": ["u_nadir"]
-      },
-      friendRequests: []
+      currentUserId: null, usedQuestionIds: [], users: [],
+      rooms: [{ id: "101", name: "Açıq Tor Otağı", type: "open", password: "", maxPlayers: 4, players: [], lockedOpponentFor: {}, activeDuel: null, inviteBanner: null }],
+      friendships: {}, friendRequests: []
     };
 
     let state = loadState();
@@ -567,41 +269,30 @@
         const res = await fetch("./questions.json", { cache: "no-store" });
         if (res.ok) {
           const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
-            questionBank = data;
-            renderRoomTab();
-          }
+          if (Array.isArray(data) && data.length) { questionBank = data; renderAll(); }
         }
-      } catch {
-        // questions.json hələ yaradılmayıbsa FALLBACK_QUESTIONS qalır
-      }
+      } catch {}
     }
 
     function pickNextQuestion() {
       const unused = questionBank.filter(q => !state.usedQuestionIds.includes(q.id));
-      const pool = unused.length > 0 ? unused : questionBank;
-      if (unused.length === 0) state.usedQuestionIds = [];
+      const pool = unused.length ? unused : questionBank;
+      if (!unused.length) state.usedQuestionIds = [];
       const chosen = pool[Math.floor(Math.random() * pool.length)];
-      if (chosen && chosen.id !== undefined) {
-        state.usedQuestionIds.push(chosen.id);
-      }
+      if (chosen && chosen.id !== undefined) state.usedQuestionIds.push(chosen.id);
       return chosen || FALLBACK_QUESTIONS[0];
     }
 
     function loadState() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return structuredClone(defaultState);
-        return { ...structuredClone(defaultState), ...JSON.parse(raw) };
-      } catch {
-        return structuredClone(defaultState);
-      }
+        return raw ? { ...structuredClone(defaultState), ...JSON.parse(raw) } : structuredClone(defaultState);
+      } catch { return structuredClone(defaultState); }
     }
 
     function saveState(broadcast = true) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      } catch {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+      catch {
         showToast("Yaddaş limiti doldu — profil şəkli silinir");
         state.users.forEach(u => { u.photo = null; });
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
@@ -610,663 +301,302 @@
       renderAll();
     }
 
-    if (channel) {
-      channel.onmessage = (ev) => {
-        if (ev.data && ev.data.type === "SYNC") {
-          state = loadState();
-          renderAll();
-        }
-      };
-    }
+    if (channel) channel.onmessage = (ev) => { if (ev.data?.type === "SYNC") { state = loadState(); renderAll(); } };
 
     function showToast(msg) {
       const box = document.getElementById("toastBox");
-      box.textContent = msg;
-      box.style.display = "block";
-      clearTimeout(box._t);
-      box._t = setTimeout(() => { box.style.display = "none"; }, 2600);
+      box.textContent = msg; box.style.display = "block";
+      clearTimeout(box._t); box._t = setTimeout(() => { box.style.display = "none"; }, 2500);
     }
 
-    function getCurrentUser() {
-      return state.users.find(u => u.id === state.currentUserId) || null;
-    }
-
-    function getUserById(id) {
-      return state.users.find(u => u.id === id) || null;
-    }
-
-    function getAvatarHtml(user) {
-      if (!user) return "🕸️";
-      if (user.photo) return `<img src="${user.photo}" alt="${user.nick}" />`;
-      return user.avatar || "🕸️";
-    }
+    const getCurrentUser = () => state.users.find(u => u.id === state.currentUserId) || null;
+    const getUserById = (id) => state.users.find(u => u.id === id) || null;
+    const getAvatarHtml = (u) => !u ? "🕸️" : (u.photo ? `<img src="${u.photo}" alt="${u.nick}" />` : (u.avatar || "🕸️"));
 
     function initAvatarPicker() {
-      const picker = document.getElementById("avatarPicker");
-      picker.innerHTML = AVATARS.map(av => `
-        <div class="avatar-opt ${av === selectedAvatar ? "selected" : ""}" onclick="pickAvatar('${av}')">${av}</div>
-      `).join("");
+      document.getElementById("avatarPicker").innerHTML = AVATARS.map(av =>
+        `<div class="avatar-opt ${av === selectedAvatar ? "selected" : ""}" onclick="pickAvatar('${av}')">${av}</div>`
+      ).join("");
     }
 
-    function pickAvatar(av) {
-      selectedAvatar = av;
-      tempPhotoData = null;
-      initAvatarPicker();
-    }
+    function pickAvatar(av) { selectedAvatar = av; tempPhotoData = null; initAvatarPicker(); }
 
     function handlePhotoUpload(e, mode) {
-      const file = e.target.files[0];
+      const file = e.target.files?.[0];
       if (!file) return;
       const reader = new FileReader();
       reader.onload = () => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
-          canvas.width = 96;
-          canvas.height = 96;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, 96, 96);
-          const compressed = canvas.toDataURL("image/jpeg", 0.65);
-          if (mode === "reg") {
-            tempPhotoData = compressed;
-            showToast("Şəkil seçildi");
-          } else if (mode === "prof") {
-            const u = getCurrentUser();
-            if (u) {
-              u.photo = compressed;
-              saveState();
-              showToast("Profil şəkli yeniləndi");
-            }
-          }
-        };
-        img.src = reader.result;
+        tempPhotoData = reader.result;
+        if (mode === "prof") document.getElementById("profAvatarPreview").innerHTML = `<img src="${tempPhotoData}" alt="avatar" />`;
       };
       reader.readAsDataURL(file);
     }
 
     function sendVerifyCode() {
       const email = document.getElementById("regEmail").value.trim();
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-      if (!emailRegex.test(email)) {
-        return showToast("Düzgün e-poçt ünvanı daxil edin");
-      }
+      if (!email || !email.includes("@")) return showToast("Düzgün e-poçt ünvanı yazın");
       pendingEmailCode = String(Math.floor(1000 + Math.random() * 9000));
       emailVerified = false;
       document.getElementById("verifyBox").classList.remove("hidden");
-      document.getElementById("verifyHint").textContent = `Sınaq təsdiq kodu: ${pendingEmailCode} (daxil edib təsdiqləyin)`;
-      showToast("Təsdiq kodu göndərildi");
+      document.getElementById("verifyHint").textContent = `Sınaq kodu: ${pendingEmailCode}`;
+      showToast("Təsdiq kodu hazırlandı");
     }
 
     function confirmEmailCode() {
-      const entered = document.getElementById("regCode").value.trim();
-      if (!pendingEmailCode || entered !== pendingEmailCode) {
-        return showToast("Təsdiq kodu yanlışdır");
-      }
-      emailVerified = true;
-      showToast("E-poçt təsdiqləndi");
+      if (pendingEmailCode && document.getElementById("regCode").value.trim() === pendingEmailCode) {
+        emailVerified = true; showToast("E-poçt təsdiqləndi");
+      } else showToast("Kod yanlışdır");
     }
 
     function completeRegistration() {
       const nick = document.getElementById("regNick").value.trim();
       const email = document.getElementById("regEmail").value.trim();
       const city = document.getElementById("regCity").value;
+      if (!nick) return showToast("Ləqəb daxil edin");
+      if (!email || !email.includes("@")) return showToast("E-poçt ünvanı daxil edin");
+      if (!city) return showToast("Şəhər / Rayon seçin");
 
-      if (nick.length < 3) return showToast("Ləqəb ən az 3 simvol olmalıdır");
-      if (!emailVerified) return showToast("Əvvəlcə e-poçt kodunu təsdiqləyin");
-      if (!city) return showToast("Şəhər seçin");
-
-      const exists = state.users.find(u => u.nick.toLowerCase() === nick.toLowerCase());
-      if (exists) {
-        exists.lives = 3;
-        state.currentUserId = exists.id;
-        saveState();
-        return showToast("Mövcud profilə daxil oldunuz");
-      }
-
-      const newUser = {
-        id: "u_" + Date.now(),
-        nick,
-        email,
-        city,
-        avatar: selectedAvatar,
-        photo: tempPhotoData,
-        score: 0,
-        wins: 0,
-        lives: 3
-      };
-
+      const newUser = { id: "u_" + Date.now(), nick, email, city, avatar: selectedAvatar, photo: tempPhotoData, score: 0, wins: 0, lives: 3 };
       state.users.push(newUser);
-      state.friendships[newUser.id] = [];
       state.currentUserId = newUser.id;
+      state.friendships[newUser.id] = state.friendships[newUser.id] || [];
+      tempPhotoData = null;
       saveState();
-      showToast("Qeydiyyat tamamlandı!");
-    }
-
-    function logoutUser() {
-      state.currentUserId = null;
-      selectedOpponentId = null;
-      saveState();
+      showToast("Profil yaradıldı");
     }
 
     function switchTab(tab) {
-      document.querySelectorAll(".tab-btn").forEach(b => {
-        b.classList.toggle("active", b.dataset.tab === tab);
-      });
-      ["room", "friends", "rank", "profile"].forEach(t => {
-        document.getElementById("tab-" + t).classList.toggle("hidden", t !== tab);
-      });
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+      ["room", "friends", "rank", "profile"].forEach(t => document.getElementById("tab-" + t).classList.toggle("hidden", t !== tab));
+      renderAll();
     }
 
     function toggleRoomPassInput() {
-      const type = document.getElementById("newRoomType").value;
-      document.getElementById("newRoomPassField").classList.toggle("hidden", type !== "private");
+      document.getElementById("newRoomPassField").classList.toggle("hidden", document.getElementById("newRoomType").value !== "private");
     }
 
     function createRoom() {
       const me = getCurrentUser();
-      if (!me) return;
-      const name = document.getElementById("newRoomName").value.trim() || `${me.nick} Otağı`;
+      if (!me) return showToast("Əvvəlcə qeydiyyatdan keçin");
+      const name = document.getElementById("newRoomName").value.trim() || "Tor Otağı";
       const type = document.getElementById("newRoomType").value;
-      const password = document.getElementById("newRoomPass").value.trim();
+      const password = type === "private" ? document.getElementById("newRoomPass").value.trim() : "";
+      if (type === "private" && !password) return showToast("Şifrə yazın");
 
-      if (type === "private" && !password) {
-        return showToast("Şifrəli otaq üçün şifrə yazın");
-      }
-
-      const roomId = String(Math.floor(1000 + Math.random() * 9000));
+      leaveRoom(true);
       state.rooms.push({
-        id: roomId,
-        name,
-        type,
-        password,
-        maxPlayers: 4,
-        players: [me.id],
-        lockedOpponentFor: {},
-        activeDuel: null,
-        inviteBanner: null
+        id: String(Math.floor(100 + Math.random() * 900)),
+        name, type, password, maxPlayers: 4, players: [me.id],
+        lockedOpponentFor: {}, activeDuel: null, inviteBanner: null
       });
+      me.lives = 3;
+      document.getElementById("newRoomName").value = "";
+      document.getElementById("newRoomPass").value = "";
       saveState();
-      showToast(`Otaq yaradıldı (#${roomId})`);
     }
 
     function joinRoomById(roomId, pass = "") {
       const me = getCurrentUser();
-      if (!me) return;
+      if (!me) return showToast("Əvvəlcə qeydiyyatdan keçin");
       const room = state.rooms.find(r => r.id === roomId);
       if (!room) return showToast("Otaq tapılmadı");
-      if (room.type === "private" && room.password !== pass) {
-        return showToast("Otaq şifrəsi yanlışdır");
-      }
-      if (room.players.length >= room.maxPlayers && !room.players.includes(me.id)) {
-        return showToast("Otaqda boş yer qalmadı");
-      }
-      if (!room.players.includes(me.id)) {
-        room.players.push(me.id);
-      }
-      if (me.lives <= 0) me.lives = 3;
+      if (room.type === "private" && room.password !== pass) return showToast("Şifrə yanlışdır");
+      if (room.players.length >= room.maxPlayers && !room.players.includes(me.id)) return showToast("Otaq doludur");
+
+      leaveRoom(true);
+      if (!room.players.includes(me.id)) room.players.push(me.id);
+      me.lives = 3;
+      selectedOpponentId = null;
       saveState();
     }
 
     function joinPrivateRoom() {
-      const id = document.getElementById("joinRoomId").value.trim();
-      const pass = document.getElementById("joinRoomPass").value.trim();
-      joinRoomById(id, pass);
+      joinRoomById(document.getElementById("joinRoomId").value.trim(), document.getElementById("joinRoomPass").value.trim());
     }
 
-    function getMyCurrentRoom() {
-      const me = getCurrentUser();
-      if (!me) return null;
-      return state.rooms.find(r => r.players.includes(me.id)) || null;
-    }
+    const getMyRoom = () => !state.currentUserId ? null : state.rooms.find(r => r.players.includes(state.currentUserId)) || null;
 
-    function leaveRoom() {
-      const me = getCurrentUser();
-      const room = getMyCurrentRoom();
-      if (!me || !room) return;
-      room.players = room.players.filter(id => id !== me.id);
-      if (room.lockedOpponentFor) delete room.lockedOpponentFor[me.id];
-      if (room.activeDuel && (room.activeDuel.challengerId === me.id || room.activeDuel.opponentId === me.id)) {
-        room.activeDuel = null;
-      }
-      state.rooms = state.rooms.filter(r => r.players.length > 0);
+    function leaveRoom(silent = false) {
+      const me = getCurrentUser(), room = getMyRoom();
+      if (me && room) { room.players = room.players.filter(id => id !== me.id); delete room.lockedOpponentFor[me.id]; }
       selectedOpponentId = null;
-      saveState();
+      if (!silent) saveState();
     }
 
-    function selectOpponentCard(oppId) {
-      const room = getMyCurrentRoom();
-      const me = getCurrentUser();
-      if (!room || !me) return;
-      if (room.lockedOpponentFor && room.lockedOpponentFor[me.id]) {
-        return showToast("Duel seçimi ləğv edilə bilməz!");
-      }
-      selectedOpponentId = oppId;
-      renderRoomTab();
+    function selectOpponent(id) {
+      const room = getMyRoom();
+      if (!room || room.lockedOpponentFor[state.currentUserId]) return;
+      selectedOpponentId = id; renderAll();
     }
 
     function confirmDuelSelection() {
-      const room = getMyCurrentRoom();
-      const me = getCurrentUser();
-      if (!room || !me || !selectedOpponentId) return;
-
+      const me = getCurrentUser(), room = getMyRoom();
+      if (!me || !room || !selectedOpponentId) return;
+      room.lockedOpponentFor[me.id] = selectedOpponentId;
       const opp = getUserById(selectedOpponentId);
-      if (!opp) return;
-
-      room.lockedOpponentFor[me.id] = opp.id;
-      room.inviteBanner = {
-        challengerId: me.id,
-        opponentId: opp.id,
-        fromName: me.nick,
-        toName: opp.nick,
-        endsAt: Date.now() + 5500
-      };
-      saveState();
-    }
-
-    function startDuelFromBanner(room) {
-      const q = pickNextQuestion();
-      room.activeDuel = {
-        challengerId: room.inviteBanner.challengerId,
-        opponentId: room.inviteBanner.opponentId,
-        question: q,
-        disconnectedPlayerId: null
-      };
-      room.inviteBanner = null;
-      saveState();
-    }
-
-    function answerDuelOption(optIndex) {
-      const room = getMyCurrentRoom();
-      const me = getCurrentUser();
-      if (!room || !room.activeDuel || !me) return;
-
-      const q = room.activeDuel.question;
-      const won = q && optIndex === q.ans;
-
-      if (won) {
-        me.score += 10;
-        me.wins += 1;
-        showToast("Düzgün cavab! +10 xal");
-      } else {
-        me.lives = Math.max(0, me.lives - 1);
-        showToast("Səhv cavab! 1 can itirdiniz");
-        if (me.lives === 0) {
-          room.players = room.players.filter(id => id !== me.id);
-          showToast("Canınız bitdi, oyundan çıxdınız");
-        }
-      }
-
-      delete room.lockedOpponentFor[me.id];
-      room.activeDuel = null;
+      room.inviteBanner = `${me.nick} vs ${opp ? opp.nick : "Rəqib"}`;
+      room.activeDuel = { p1: me.id, p2: selectedOpponentId, question: pickNextQuestion(), disconnectedUserId: null };
       selectedOpponentId = null;
+      saveState();
+      showToast("Duel başladı");
+    }
+
+    function answerDuelOption(idx) {
+      const me = getCurrentUser(), room = getMyRoom();
+      if (!me || !room?.activeDuel) return;
+      if (idx === room.activeDuel.question.ans) { me.score = (me.score || 0) + 20; showToast("Düzgün cavab! +20 xal"); }
+      else { me.lives = Math.max(0, (me.lives ?? 3) - 1); showToast("Səhv cavab! -1 can"); }
+      room.activeDuel.question = pickNextQuestion();
       saveState();
     }
 
     function simulateOpponentDisconnect() {
-      const room = getMyCurrentRoom();
-      const me = getCurrentUser();
-      if (!room || !room.activeDuel || !me) return;
-
-      const oppId = room.activeDuel.opponentId === me.id ? room.activeDuel.challengerId : room.activeDuel.opponentId;
-      const opp = getUserById(oppId);
-      if (!opp) return;
-
-      room.activeDuel.disconnectedPlayerId = opp.id;
-      saveState();
-      showToast(`${opp.nick} bağlantısı kəsildi, texniki məğlubiyyət verilir...`);
-
-      clearTimeout(disconnectTimer);
-      disconnectTimer = setTimeout(() => {
-        const curRoom = getMyCurrentRoom();
-        if (!curRoom || !curRoom.activeDuel || curRoom.activeDuel.disconnectedPlayerId !== opp.id) return;
-        opp.lives = Math.max(0, opp.lives - 1);
-        me.score += 10;
-        me.wins += 1;
-        if (opp.lives === 0) {
-          curRoom.players = curRoom.players.filter(id => id !== opp.id);
-          curRoom.activeDuel = null;
-        }
-        saveState();
-        showToast(`${opp.nick} texniki məğlub oldu (-1 can)`);
-      }, 2500);
+      const room = getMyRoom();
+      if (!room?.activeDuel) return;
+      room.activeDuel.disconnectedUserId = room.activeDuel.p1 === state.currentUserId ? room.activeDuel.p2 : room.activeDuel.p1;
+      saveState(); showToast("Rəqibin bağlantısı kəsildi");
     }
 
     function simulateOpponentReconnect() {
-      const room = getMyCurrentRoom();
-      if (!room || !room.activeDuel || !room.activeDuel.disconnectedPlayerId) return;
-      const reconnected = getUserById(room.activeDuel.disconnectedPlayerId);
-      room.activeDuel.disconnectedPlayerId = null;
-      if (reconnected && reconnected.lives <= 0) {
-        room.players = room.players.filter(id => id !== reconnected.id);
-        room.activeDuel = null;
-        saveState();
-        return showToast(`${reconnected.nick} canı 0 olduğu üçün oyundan çıxarıldı`);
-      }
-      saveState();
-      if (reconnected) {
-        showToast(`${reconnected.nick} 1 can əskik (${reconnected.lives} can) oyuna qayıtdı`);
-      }
+      const room = getMyRoom();
+      if (!room?.activeDuel?.disconnectedUserId) return;
+      const opp = getUserById(room.activeDuel.disconnectedUserId);
+      if (opp) opp.lives = Math.max(0, (opp.lives ?? 3) - 1);
+      room.activeDuel.disconnectedUserId = null;
+      saveState(); showToast("Rəqib qayıtdı (-1 can)");
     }
 
     function sendFriendRequest() {
       const me = getCurrentUser();
       if (!me) return;
-      const nick = document.getElementById("friendSearchNick").value.trim().toLowerCase();
-      const target = state.users.find(u => u.nick.toLowerCase() === nick);
-      if (!target) return showToast("Belə ləqəbli oyunçu tapılmadı");
-      if (target.id === me.id) return showToast("Özünüzə təklif göndərə bilməzsiniz");
-
-      const alreadyFriend = (state.friendships[me.id] || []).includes(target.id);
-      if (alreadyFriend) return showToast("Artıq dostsunuz");
-
-      const existsReq = state.friendRequests.find(r => r.fromId === me.id && r.toId === target.id);
-      if (existsReq) return showToast("Dost təklifi artıq göndərilib");
-
-      state.friendRequests.push({ id: "fr_" + Date.now(), fromId: me.id, toId: target.id });
+      const nick = document.getElementById("friendSearchNick").value.trim();
+      const target = state.users.find(u => u.nick.toLowerCase() === nick.toLowerCase() && u.id !== me.id);
+      if (!target) return showToast("İstifadəçi tapılmadı");
+      if (!state.friendRequests.some(r => r.from === me.id && r.to === target.id)) {
+        state.friendRequests.push({ id: "fr_" + Date.now(), from: me.id, to: target.id });
+      }
       document.getElementById("friendSearchNick").value = "";
-      saveState();
-      showToast("Dost təklifi göndərildi");
+      saveState(); showToast("Təklif göndərildi");
     }
 
     function acceptFriendRequest(reqId) {
       const req = state.friendRequests.find(r => r.id === reqId);
       if (!req) return;
-      state.friendships[req.fromId] = [...new Set([...(state.friendships[req.fromId] || []), req.toId])];
-      state.friendships[req.toId] = [...new Set([...(state.friendships[req.toId] || []), req.fromId])];
+      state.friendships[req.from] = state.friendships[req.from] || [];
+      state.friendships[req.to] = state.friendships[req.to] || [];
+      if (!state.friendships[req.from].includes(req.to)) state.friendships[req.from].push(req.to);
+      if (!state.friendships[req.to].includes(req.from)) state.friendships[req.to].push(req.from);
       state.friendRequests = state.friendRequests.filter(r => r.id !== reqId);
       saveState();
-      showToast("Dost təklifi qəbul edildi");
-    }
-
-    function declineFriendRequest(reqId) {
-      state.friendRequests = state.friendRequests.filter(r => r.id !== reqId);
-      saveState();
-      showToast("Dost təklifi rədd edildi");
     }
 
     function inviteFriendToRoom(friendId) {
-      const room = getMyCurrentRoom();
-      const friend = getUserById(friendId);
-      if (!room || !friend) return;
-      if (room.players.length >= room.maxPlayers) {
-        return showToast("Otaqda boş yer qalmadı");
-      }
-      if (room.players.includes(friendId)) {
-        return showToast("Dostunuz artıq otaqdadır");
-      }
-      room.players.push(friendId);
-      if (friend.lives <= 0) friend.lives = 3;
-      saveState();
-      showToast(`${friend.nick} boş yerə otağa çağırıldı!`);
+      const room = getMyRoom();
+      if (!room) return;
+      if (room.players.length >= room.maxPlayers) return showToast("Otaqda boş yer yoxdur");
+      if (!room.players.includes(friendId)) { room.players.push(friendId); saveState(); showToast("Dost əlavə edildi"); }
     }
 
     function saveProfileChanges() {
       const me = getCurrentUser();
       if (!me) return;
       me.city = document.getElementById("profCity").value;
-      saveState();
-      showToast("Profil yeniləndi");
+      if (tempPhotoData) { me.photo = tempPhotoData; tempPhotoData = null; }
+      saveState(); showToast("Profil yadda saxlandı");
     }
 
     function renderAll() {
       const me = getCurrentUser();
-      const authView = document.getElementById("authView");
-      const mainNav = document.getElementById("mainNav");
-      const headerRight = document.getElementById("headerRight");
+      document.getElementById("authView").classList.toggle("hidden", !!me);
+      document.getElementById("mainNav").classList.toggle("hidden", !me);
 
       if (!me) {
-        authView.classList.remove("hidden");
-        mainNav.classList.add("hidden");
-        ["room", "friends", "rank", "profile"].forEach(t => document.getElementById("tab-" + t).classList.add("hidden"));
-        document.getElementById("statusSub").textContent = "Davam etmək üçün qeydiyyatdan keçin";
-        headerRight.innerHTML = "";
+        document.getElementById("statusSub").textContent = "Qeydiyyat və ya giriş gözlənilir";
+        document.getElementById("headerRight").innerHTML = "";
         return;
       }
 
-      authView.classList.add("hidden");
-      mainNav.classList.remove("hidden");
-      document.getElementById("statusSub").textContent = `${me.nick} • ${me.city} • ❤️ ${me.lives} • ⭐ ${me.score}`;
-      headerRight.innerHTML = `
-        <div class="avatar-box">${getAvatarHtml(me)}</div>
-        <button class="btn secondary" onclick="logoutUser()">Çıxış</button>
-      `;
+      document.getElementById("statusSub").textContent = `${me.nick} · ${me.city} · ${me.score || 0} xal · ❤️ ${me.lives ?? 3} can`;
+      document.getElementById("headerRight").innerHTML = `<span class="badge ok">${me.nick}</span>`;
 
-      renderRoomTab();
-      renderFriendsTab();
-      renderRankingTab();
-      renderProfileTab();
-    }
+      const myRoom = getMyRoom();
+      document.getElementById("roomLobbyCard").classList.toggle("hidden", !!myRoom);
+      document.getElementById("activeRoomCard").classList.toggle("hidden", !myRoom);
 
-    function renderRoomTab() {
-      const me = getCurrentUser();
-      const room = getMyCurrentRoom();
-      const lobbyCard = document.getElementById("roomLobbyCard");
-      const activeCard = document.getElementById("activeRoomCard");
-
-      if (!room) {
-        lobbyCard.classList.remove("hidden");
-        activeCard.classList.add("hidden");
-
+      if (!myRoom) {
         const openRooms = state.rooms.filter(r => r.type === "open");
-        const listEl = document.getElementById("openRoomsList");
-        listEl.innerHTML = openRooms.length
-          ? openRooms.map(r => `
-              <div class="item-card">
-                <div>
-                  <div style="font-weight:700">${r.name} <span class="badge">#${r.id}</span></div>
-                  <div class="subtitle">Oyunçu: ${r.players.length}/${r.maxPlayers} • Açıq otaq</div>
-                </div>
-                <button class="btn" onclick="joinRoomById('${r.id}')">Qoşul</button>
-              </div>
-            `).join("")
-          : `<div class="subtitle">Hazırda açıq otaq yoxdur. Yeni otaq yaradın.</div>`;
-        return;
-      }
+        document.getElementById("openRoomsList").innerHTML = openRooms.length
+          ? openRooms.map(r => `<div class="item-card"><div><div style="font-weight:700">${r.name} (#${r.id})</div><div class="subtitle">Oyunçu: ${r.players.length}/${r.maxPlayers}</div></div><button class="btn sm" onclick="joinRoomById('${r.id}')">Qoşul</button></div>`).join("")
+          : `<div class="subtitle">Açıq otaq yoxdur</div>`;
+      } else {
+        const aliveCount = myRoom.players.filter(id => (getUserById(id)?.lives ?? 3) > 0).length;
+        document.getElementById("roomHeaderTitle").textContent = `${myRoom.name} (#${myRoom.id})`;
+        document.getElementById("roomHeaderMeta").textContent = `Aktiv oyunçu: ${aliveCount}/${myRoom.maxPlayers}`;
 
-      lobbyCard.classList.add("hidden");
-      activeCard.classList.remove("hidden");
-
-      document.getElementById("roomHeaderTitle").textContent = `${room.name} (#${room.id})`;
-      document.getElementById("roomHeaderMeta").textContent =
-        `${room.type === "open" ? "Açıq otaq" : "Şifrəli otaq"} • Canlı oyunçu: ${room.players.length}/${room.maxPlayers}`;
-
-      document.getElementById("roomPlayersList").innerHTML = room.players.map(pid => {
-        const p = getUserById(pid);
-        if (!p) return "";
-        return `
-          <div class="item-card">
-            <div class="row">
-              <div class="avatar-box">${getAvatarHtml(p)}</div>
-              <div>
-                <div style="font-weight:700">${p.nick} ${p.id === me.id ? "(Sən)" : ""}</div>
-                <div class="subtitle">${p.city} • Xal: ${p.score}</div>
-              </div>
-            </div>
-            <span class="badge ok">❤️ ${p.lives} can</span>
-          </div>
-        `;
-      }).join("");
-
-      const inviteBox = document.getElementById("inviteFriendBox");
-      const myFriends = state.friendships[me.id] || [];
-      const hasSpace = room.players.length < room.maxPlayers;
-      if (hasSpace && myFriends.length > 0) {
-        inviteBox.classList.remove("hidden");
-        document.getElementById("roomInviteFriendsList").innerHTML = myFriends.map(fid => {
-          const fr = getUserById(fid);
-          if (!fr) return "";
-          const inRoom = room.players.includes(fid);
-          return `
-            <div class="item-card">
-              <div style="font-weight:700">${fr.nick} <span class="subtitle">(${fr.city})</span></div>
-              <button class="btn secondary" ${inRoom ? "disabled" : ""} onclick="inviteFriendToRoom('${fr.id}')">
-                ${inRoom ? "Otaqdadır" : "Boş yerə çağır"}
-              </button>
-            </div>
-          `;
+        document.getElementById("roomPlayersList").innerHTML = myRoom.players.map(pid => {
+          const u = getUserById(pid); if (!u) return "";
+          const isMe = u.id === me.id;
+          return `<div class="item-card ${isMe ? "selected" : ""}"><div class="row"><div class="avatar-box">${getAvatarHtml(u)}</div><div><div style="font-weight:700">${u.nick}${isMe ? " (Sən)" : ""}</div><div class="subtitle">${u.score || 0} xal</div></div></div><span class="badge ${(u.lives ?? 3) > 0 ? "ok" : "warn"}">❤️ ${u.lives ?? 3} can</span></div>`;
         }).join("");
-      } else {
-        inviteBox.classList.add("hidden");
-      }
 
-      const bannerEl = document.getElementById("inviteBanner");
-      if (room.inviteBanner) {
-        const leftMs = room.inviteBanner.endsAt - Date.now();
-        if (leftMs <= 0) {
-          startDuelFromBanner(room);
-          return;
+        const invitable = (state.friendships[me.id] || []).filter(fid => !myRoom.players.includes(fid));
+        document.getElementById("inviteFriendBox").classList.toggle("hidden", myRoom.players.length >= myRoom.maxPlayers || !invitable.length);
+        document.getElementById("roomInviteFriendsList").innerHTML = invitable.map(fid => {
+          const f = getUserById(fid);
+          return f ? `<div class="item-card"><span>${f.nick}</span><button class="btn sm secondary" onclick="inviteFriendToRoom('${f.id}')">Çağır</button></div>` : "";
+        }).join("");
+
+        const banner = document.getElementById("inviteBanner");
+        banner.classList.toggle("hidden", !myRoom.inviteBanner);
+        if (myRoom.inviteBanner) document.getElementById("inviteBannerText").textContent = myRoom.inviteBanner;
+
+        const locked = !!myRoom.lockedOpponentFor[me.id];
+        const opponents = myRoom.players.map(getUserById).filter(u => u && u.id !== me.id && (u.lives ?? 3) > 0);
+        document.getElementById("openOpponentsList").innerHTML = opponents.length
+          ? opponents.map(op => `<div class="item-card selectable ${selectedOpponentId === op.id ? "selected" : ""}" onclick="${locked ? "" : `selectOpponent('${op.id}')`}"><div class="row"><div class="avatar-box">${getAvatarHtml(op)}</div><span style="font-weight:700">${op.nick}</span></div><span class="badge">${op.score || 0} xal</span></div>`).join("")
+          : `<div class="subtitle">Seçilə biləcək rəqib yoxdur</div>`;
+
+        const confirmBtn = document.getElementById("confirmDuelBtn");
+        confirmBtn.disabled = locked || !selectedOpponentId;
+        confirmBtn.textContent = locked ? "Seçim Təsdiqləndi" : "Seçimi Təsdiqlə";
+
+        const duelBox = document.getElementById("activeDuelBox");
+        duelBox.classList.toggle("hidden", !myRoom.activeDuel);
+        if (myRoom.activeDuel) {
+          const p1 = getUserById(myRoom.activeDuel.p1), p2 = getUserById(myRoom.activeDuel.p2), q = myRoom.activeDuel.question;
+          document.getElementById("duelMatchupTitle").textContent = `${p1?.nick || "?"} vs ${p2?.nick || "?"}`;
+          document.getElementById("duelQuestionMeta").textContent = `Baza: ${questionBank.length} sual`;
+          document.getElementById("duelCategoryBadge").textContent = q.cat || "Ümumi";
+          document.getElementById("duelQuestionText").textContent = q.q;
+          document.getElementById("connBadge").textContent = myRoom.activeDuel.disconnectedUserId ? "Bağlantı: Qırılıb" : "Bağlantı: Aktiv";
+          document.getElementById("duelOptionsGrid").innerHTML = (q.opts || []).map((opt, i) => `<button class="btn secondary" onclick="answerDuelOption(${i})">${opt}</button>`).join("");
         }
-        const secLeft = Math.max(1, Math.ceil(leftMs / 1000));
-        bannerEl.classList.remove("hidden");
-        document.getElementById("inviteBannerText").textContent =
-          `${room.inviteBanner.fromName}, ${room.inviteBanner.toName}-ni dəvət etdi!`;
-        document.getElementById("inviteCountdownText").textContent =
-          `Duel ${secLeft} saniyə sonra başlayacaq...`;
-      } else {
-        bannerEl.classList.add("hidden");
       }
 
-      const opponents = room.players
-        .map(id => getUserById(id))
-        .filter(p => p && p.id !== me.id && p.lives > 0);
-
-      const lockedOppId = room.lockedOpponentFor ? room.lockedOpponentFor[me.id] : null;
-      const oppListEl = document.getElementById("openOpponentsList");
-      const confirmBtn = document.getElementById("confirmDuelBtn");
-
-      oppListEl.innerHTML = opponents.length
-        ? opponents.map(opp => {
-            const isSel = (lockedOppId || selectedOpponentId) === opp.id;
-            return `
-              <div class="item-card selectable ${isSel ? "selected" : ""}" onclick="selectOpponentCard('${opp.id}')">
-                <div class="row">
-                  <div class="avatar-box">${getAvatarHtml(opp)}</div>
-                  <div>
-                    <div style="font-weight:700">${opp.nick}</div>
-                    <div class="subtitle">${opp.city} • ⭐ ${opp.score}</div>
-                  </div>
-                </div>
-                <span class="badge">❤️ ${opp.lives} can</span>
-              </div>
-            `;
-          }).join("")
-        : `<div class="subtitle">Otaqda başqa canlı rəqib yoxdur. Dost çağırın və ya qoşulmasını gözləyin.</div>`;
-
-      confirmBtn.disabled = !selectedOpponentId || Boolean(lockedOppId);
-      confirmBtn.textContent = lockedOppId ? "Seçim Təsdiqləndi (Ləğv edilmir)" : "Seçimi Təsdiqlə";
-
-      const duelBox = document.getElementById("activeDuelBox");
-      if (room.activeDuel) {
-        duelBox.classList.remove("hidden");
-        const p1 = getUserById(room.activeDuel.challengerId);
-        const p2 = getUserById(room.activeDuel.opponentId);
-        document.getElementById("duelMatchupTitle").textContent =
-          `${p1 ? p1.nick : "?"} VS ${p2 ? p2.nick : "?"}`;
-        document.getElementById("duelQuestionMeta").textContent =
-          `Aktiv sual bazası: ${questionBank.length} sual`;
-
-        const q = room.activeDuel.question || FALLBACK_QUESTIONS[0];
-        document.getElementById("duelCategoryBadge").textContent = `Kateqoriya: ${q.cat || "Ümumi"}`;
-        document.getElementById("duelQuestionText").textContent = q.q;
-        document.getElementById("duelOptionsGrid").innerHTML = (q.opts || []).map((opt, i) => `
-          <button class="btn secondary" onclick="answerDuelOption(${i})">${opt}</button>
-        `).join("");
-
-        const discId = room.activeDuel.disconnectedPlayerId;
-        const connBadge = document.getElementById("connBadge");
-        if (discId) {
-          const dp = getUserById(discId);
-          connBadge.textContent = `${dp ? dp.nick : "Rəqib"} bağlantısı kəsildi`;
-          connBadge.className = "badge warn";
-        } else {
-          connBadge.textContent = "Bağlantı: Aktiv";
-          connBadge.className = "badge ok";
-        }
-      } else {
-        duelBox.classList.add("hidden");
-      }
-    }
-
-    function renderFriendsTab() {
-      const me = getCurrentUser();
-      if (!me) return;
-
-      const incoming = state.friendRequests.filter(r => r.toId === me.id);
+      const incoming = state.friendRequests.filter(r => r.to === me.id);
       document.getElementById("incomingRequestsList").innerHTML = incoming.length
-        ? incoming.map(r => {
-            const sender = getUserById(r.fromId);
-            return `
-              <div class="item-card">
-                <div>
-                  <div style="font-weight:700">${sender ? sender.nick : r.fromId}</div>
-                  <div class="subtitle">Dostluq təklifi göndərdi</div>
-                </div>
-                <div class="row">
-                  <button class="btn success" onclick="acceptFriendRequest('${r.id}')">Təsdiq</button>
-                  <button class="btn danger" onclick="declineFriendRequest('${r.id}')">İmtina</button>
-                </div>
-              </div>
-            `;
-          }).join("")
-        : `<div class="subtitle">Yeni dost təklifi yoxdur.</div>`;
+        ? incoming.map(r => `<div class="item-card"><span>${getUserById(r.from)?.nick || r.from}</span><button class="btn sm success" onclick="acceptFriendRequest('${r.id}')">Qəbul et</button></div>`).join("")
+        : `<div class="subtitle">Yeni təklif yoxdur</div>`;
 
-      const friendIds = state.friendships[me.id] || [];
-      document.getElementById("friendsList").innerHTML = friendIds.length
-        ? friendIds.map(fid => {
-            const fr = getUserById(fid);
-            if (!fr) return "";
-            return `
-              <div class="item-card">
-                <div class="row">
-                  <div class="avatar-box">${getAvatarHtml(fr)}</div>
-                  <div>
-                    <div style="font-weight:700">${fr.nick}</div>
-                    <div class="subtitle">${fr.city} • ⭐ ${fr.score}</div>
-                  </div>
-                </div>
-                <span class="badge ok">Dost</span>
-              </div>
-            `;
-          }).join("")
-        : `<div class="subtitle">Hələ dost əlavə etməmisiniz.</div>`;
-    }
+      const friends = state.friendships[me.id] || [];
+      document.getElementById("friendsList").innerHTML = friends.length
+        ? friends.map(fid => { const f = getUserById(fid); return f ? `<div class="item-card"><span>${f.nick} (${f.city})</span><span class="badge ok">${f.score || 0} xal</span></div>` : ""; }).join("")
+        : `<div class="subtitle">Dost siyahısı boşdur</div>`;
 
-    function renderRankingTab() {
-      const sorted = [...state.users].sort((a, b) => b.score - a.score || b.wins - a.wins);
-      document.getElementById("rankingList").innerHTML = sorted.map((u, idx) => `
-        <div class="item-card">
-          <div class="row">
-            <span class="badge">#${idx + 1}</span>
-            <div class="avatar-box">${getAvatarHtml(u)}</div>
-            <div>
-              <div style="font-weight:700">${u.nick}</div>
-              <div class="subtitle">${u.city} • Qələbə: ${u.wins}</div>
-            </div>
-          </div>
-          <span class="badge ok">⭐ ${u.score} xal</span>
-        </div>
-      `).join("");
-    }
+      const sorted = [...state.users].sort((a, b) => (b.score || 0) - (a.score || 0));
+      document.getElementById("rankingList").innerHTML = sorted.length
+        ? sorted.map((u, i) => `<div class="item-card"><span>#${i + 1} ${u.nick} (${u.city})</span><span class="badge ok">${u.score || 0} xal</span></div>`).join("")
+        : `<div class="subtitle">İstifadəçi yoxdur</div>`;
 
-    function renderProfileTab() {
-      const me = getCurrentUser();
-      if (!me) return;
       document.getElementById("profAvatarPreview").innerHTML = getAvatarHtml(me);
       document.getElementById("profNickText").textContent = me.nick;
-      document.getElementById("profMetaText").textContent = `${me.email} • ${me.city} • Qələbə: ${me.wins}`;
-      document.getElementById("profCity").value = me.city;
+      document.getElementById("profMetaText").textContent = `${me.email} · ${me.city}`;
+      document.getElementById("profCity").value = me.city || "Bakı";
     }
 
-    setInterval(() => {
-      const room = getMyCurrentRoom();
-      if (room && room.inviteBanner) {
-        renderRoomTab();
-      }
-    }, 500);
-
     initAvatarPicker();
-    renderAll();
     loadQuestionBank();
+    renderAll();
   </script>
 </body>
 </html>
