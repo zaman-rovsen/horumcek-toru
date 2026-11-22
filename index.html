@@ -50,15 +50,17 @@
     .rules-list { display: flex; flex-direction: column; gap: 8px; font-size: 13px; line-height: 1.45; }
     .rule-item { background: var(--bg); border: 1px solid var(--line); border-radius: 11px; padding: 10px 12px; }
 
-    /* HÖRÜMCƏK TORU DAİRƏVİ SAHƏ */
+    /* HƏQİQİ DAİRƏVİ TOR */
     .web-arena {
       position: relative;
       width: 100%;
-      height: 310px;
-      background: radial-gradient(circle at center, rgba(59,130,246,.13) 0%, rgba(11,16,32,.95) 72%);
+      max-width: 350px;
+      aspect-ratio: 1 / 1;
+      margin: 0 auto;
+      background: radial-gradient(circle at center, rgba(59,130,246,.14) 0%, rgba(11,16,32,.96) 72%);
       border: 1px solid var(--line);
-      border-radius: 16px;
-      overflow: hidden;
+      border-radius: 50%;
+      overflow: visible;
     }
     .web-svg {
       position: absolute;
@@ -73,46 +75,87 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
+      gap: 2px;
       z-index: 2;
-      max-width: 125px;
+      max-width: 118px;
       text-align: center;
     }
     .web-dot {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
       background: var(--accent);
       border: 3px solid #dbeafe;
-      box-shadow: 0 0 12px rgba(59,130,246,.7);
+      box-shadow: 0 0 10px rgba(59,130,246,.7);
     }
     .web-node.is-me .web-dot { background: var(--ok); border-color: #dcfce7; }
     .web-node.is-target .web-dot { background: var(--warn); border-color: #fef3c7; }
     .web-label {
-      background: rgba(17, 25, 46, .92);
+      background: rgba(17, 25, 46, .95);
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 3px 7px;
+      padding: 2px 6px;
       font-size: 11px;
       font-weight: 700;
       line-height: 1.2;
+      white-space: nowrap;
     }
-    .web-sub { font-size: 10px; color: var(--muted); }
+    .web-sub { font-size: 10px; color: var(--muted); white-space: nowrap; }
 
-    /* AŞAĞI SEÇİM VƏ 3 CAN */
+    /* AÇIQ ALT-ALTA RƏQİB SEÇİMİ VƏ AD QARŞISINDA YAN-YANA CAN */
+    .open-select-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 10px;
+    }
+    .choice-row {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .choice-row.active {
+      border-color: var(--warn);
+      background: rgba(245, 158, 11, .12);
+    }
+    .choice-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .choice-name {
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .choice-lives {
+      display: flex;
+      flex-direction: row;
+      gap: 3px;
+      font-size: 14px;
+      align-items: center;
+      white-space: nowrap;
+    }
+
     .select-footer-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 10px;
-      margin-top: 8px;
+      margin-top: 6px;
       flex-wrap: wrap;
     }
-    .hearts-row { display: flex; gap: 6px; font-size: 20px; align-items: center; }
+    .hearts-row { display: flex; flex-direction: row; gap: 6px; font-size: 20px; align-items: center; white-space: nowrap; }
     .heart.lost { opacity: .22; filter: grayscale(1); }
 
     .call-banner {
-      margin-top: 10px;
+      margin-top: 12px;
       background: rgba(59, 130, 246, .16);
       border: 1px solid #60a5fa;
       border-radius: 12px;
@@ -308,10 +351,10 @@
         </div>
       </div>
 
-      <!-- AKTİV OTAQ: YUXARIDA DAİRƏVİ TOR, AŞAĞIDA DUELƏ ÇAĞIR + 3 CAN -->
+      <!-- AKTİV OTAQ: YUXARIDA DAİRƏVİ TOR, AŞAĞIDA AÇIQ ALT-ALTA SEÇİM + 3 CAN -->
       <div id="activeRoomCard" class="app hidden">
         <div class="card">
-          <div class="top-bar" style="margin-bottom:8px">
+          <div class="top-bar" style="margin-bottom:10px">
             <div>
               <div class="sec-title" style="margin-bottom:1px" id="roomHeaderTitle">Tor</div>
               <div class="subtitle" id="roomHeaderMeta"></div>
@@ -320,30 +363,27 @@
           </div>
 
           <div class="web-arena" id="webArena">
-            <svg class="web-svg" id="webSvg" viewBox="0 0 520 310" preserveAspectRatio="none">
+            <svg class="web-svg" id="webSvg" viewBox="0 0 360 360">
               <defs>
                 <marker id="arrowHead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
                   <path d="M0,0 L0,6 L7,3 z" fill="#facc15" />
                 </marker>
               </defs>
-              <circle cx="260" cy="155" r="42" fill="none" stroke="#24355a" stroke-width="1.2" />
-              <circle cx="260" cy="155" r="82" fill="none" stroke="#24355a" stroke-width="1.2" />
-              <circle cx="260" cy="155" r="118" fill="none" stroke="#24355a" stroke-width="1.2" />
+              <circle cx="180" cy="180" r="45" fill="none" stroke="#24355a" stroke-width="1.2" />
+              <circle cx="180" cy="180" r="90" fill="none" stroke="#24355a" stroke-width="1.2" />
+              <circle cx="180" cy="180" r="132" fill="none" stroke="#24355a" stroke-width="1.2" />
             </svg>
             <div id="webNodesLayer"></div>
           </div>
 
-          <div class="subtitle" id="minPlayersNotice" style="margin-top:8px; text-align:center;"></div>
+          <div class="subtitle" id="minPlayersNotice" style="margin-top:12px; text-align:center;"></div>
           <div id="callBanner" class="call-banner hidden"></div>
           <div id="countdownBox" class="countdown-box hidden"></div>
         </div>
 
         <div class="card">
-          <div class="sec-title">Duelə Çağır</div>
-          <div class="field">
-            <label>Rəqib seç</label>
-            <select id="opponentSelect" onchange="onOpponentDropdownChange()"></select>
-          </div>
+          <div class="sec-title">Duelə Çağır (Alt-alta seçim)</div>
+          <div class="open-select-list" id="openOpponentChoices"></div>
           <div class="select-footer-row">
             <button class="btn" id="callDuelBtn" onclick="triggerCallDuel()">Duelə Çağır</button>
             <div class="hearts-row" id="myHeartsRow" title="Canlar"></div>
@@ -434,7 +474,7 @@
 
   <script>
     const AVATARS = ["🕸️", "🦁", "🦅", "🐺", "🦊", "🐉"];
-    const STORAGE_KEY = "horumcek_toru_v6_state";
+    const STORAGE_KEY = "horumcek_toru_v8_state";
     const channel = ("BroadcastChannel" in window) ? new BroadcastChannel("horumcek_toru_channel") : null;
 
     const QUESTIONS = [
@@ -454,6 +494,7 @@
     };
 
     let selectedAvatar = AVATARS[0];
+    let selectedOpponentId = null;
     let pendingCode = null;
     let countdownInterval = null;
     let questionInterval = null;
@@ -511,12 +552,17 @@
       el.textContent = msg;
       el.style.display = "block";
       clearTimeout(el._t);
-      el._t = setTimeout(() => { el.style.display = "none"; }, 2500);
+      el._t = setTimeout(() => { el.style.display = "none"; }, 2400);
     }
 
     const getCurrentUser = () => state.users.find(u => u.id === state.currentUserId) || null;
     const getUserById = (id) => state.users.find(u => u.id === id) || null;
     const getMyRoom = () => !state.currentUserId ? null : state.rooms.find(r => r.players.includes(state.currentUserId)) || null;
+
+    function renderHeartsInline(lives) {
+      const n = Math.max(0, Math.min(3, lives ?? 3));
+      return [1, 2, 3].map(i => `<span class="heart ${i > n ? "lost" : ""}">❤️</span>`).join("");
+    }
 
     function initAvatarPicker() {
       document.getElementById("avatarPicker").innerHTML = AVATARS.map(av =>
@@ -574,6 +620,7 @@
 
       leaveRoom(true);
       me.lives = 3;
+      selectedOpponentId = null;
       state.rooms.push({
         id: String(Math.floor(100 + Math.random() * 900)),
         name, type, password, maxPlayers: 5, players: [me.id], callInfo: null, duel: null
@@ -591,6 +638,7 @@
 
       leaveRoom(true);
       me.lives = 3;
+      selectedOpponentId = null;
       if (!room.players.includes(me.id)) room.players.push(me.id);
       saveState();
     }
@@ -602,23 +650,24 @@
     function leaveRoom(silent = false) {
       const me = getCurrentUser(), room = getMyRoom();
       if (me && room) room.players = room.players.filter(id => id !== me.id);
+      selectedOpponentId = null;
       if (!silent) saveState();
     }
 
-    function onOpponentDropdownChange() {
-      renderWebArena();
+    function pickOpponent(id) {
+      selectedOpponentId = id;
+      renderAll();
     }
 
     function triggerCallDuel() {
       const me = getCurrentUser(), room = getMyRoom();
-      const targetId = document.getElementById("opponentSelect").value;
       if (!me || !room) return;
       if (room.players.length < 3) return showToast("Oyun üçün ən az 3 oyunçu lazımdır");
-      if (!targetId) return showToast("Rəqib seçin");
+      if (!selectedOpponentId) return showToast("Rəqib seçin");
 
-      room.callInfo = { callerId: me.id, targetId };
+      room.callInfo = { callerId: me.id, targetId: selectedOpponentId };
       saveState();
-      startCountdownSequence(room, me.id, targetId);
+      startCountdownSequence(room, me.id, selectedOpponentId);
     }
 
     function startCountdownSequence(room, callerId, targetId) {
@@ -804,7 +853,7 @@
       const svg = document.getElementById("webSvg");
       svg.querySelectorAll(".dynamic-arrow").forEach(el => el.remove());
 
-      const cx = 260, cy = 155, r = 108;
+      const cx = 180, cy = 180, r = 115;
       const coords = {};
 
       nodesLayer.innerHTML = room.players.map((pid, i) => {
@@ -815,23 +864,22 @@
         const py = cy + r * Math.sin(angle);
         coords[pid] = { x: px, y: py };
 
-        const pctX = (px / 520) * 100;
-        const pctY = (py / 310) * 100;
-        const selectedTarget = document.getElementById("opponentSelect")?.value;
+        const pctX = (px / 360) * 100;
+        const pctY = (py / 360) * 100;
         const isMe = u.id === me.id;
-        const isTarget = u.id === selectedTarget || u.id === room.callInfo?.targetId;
+        const isTarget = u.id === selectedOpponentId || u.id === room.callInfo?.targetId;
 
         return `
           <div class="web-node ${isMe ? "is-me" : ""} ${isTarget ? "is-target" : ""}" style="left:${pctX}%; top:${pctY}%;">
             <div class="web-dot"></div>
-            <div class="web-label">${u.avatar || "🕸️"} ${u.nick}</div>
-            <div class="web-sub">${u.score || 0} xal · ❤️${u.lives ?? 3}</div>
+            <div class="web-label">${u.avatar || "🕸️"} ${u.nick} ${renderHeartsInline(u.lives)}</div>
+            <div class="web-sub">${u.score || 0} xal</div>
           </div>
         `;
       }).join("");
 
       const fromId = room.callInfo?.callerId || me.id;
-      const toId = room.callInfo?.targetId || document.getElementById("opponentSelect")?.value;
+      const toId = room.callInfo?.targetId || selectedOpponentId;
       if (fromId && toId && coords[fromId] && coords[toId] && fromId !== toId) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
         line.setAttribute("class", "dynamic-arrow");
@@ -881,18 +929,26 @@
           : `Oyunun başlaması üçün ən az 3 oyunçu lazımdır (hazırda ${pCount}).`;
 
         const opps = room.players.map(getUserById).filter(u => u && u.id !== me.id && (u.lives ?? 3) > 0);
-        const sel = document.getElementById("opponentSelect");
-        const prevVal = sel.value;
-        sel.innerHTML = opps.length
-          ? opps.map(op => `<option value="${op.id}">${op.nick} (❤️ ${op.lives ?? 3})</option>`).join("")
-          : `<option value="">Rəqib yoxdur</option>`;
-        if (opps.some(o => o.id === prevVal)) sel.value = prevVal;
-        document.getElementById("callDuelBtn").disabled = !canStart || !opps.length;
+        if (!selectedOpponentId && opps.length) selectedOpponentId = opps[0].id;
+        if (selectedOpponentId && !opps.some(o => o.id === selectedOpponentId)) {
+          selectedOpponentId = opps[0]?.id || null;
+        }
 
-        const lives = Math.max(0, Math.min(3, me.lives ?? 3));
-        document.getElementById("myHeartsRow").innerHTML = [1, 2, 3].map(i =>
-          `<span class="heart ${i > lives ? "lost" : ""}">❤️</span>`
-        ).join("");
+        document.getElementById("openOpponentChoices").innerHTML = opps.length
+          ? opps.map(op => `
+              <div class="choice-row ${selectedOpponentId === op.id ? "active" : ""}" onclick="pickOpponent('${op.id}')">
+                <div class="choice-left">
+                  <span class="choice-name">${op.avatar || "🕸️"} ${op.nick}</span>
+                  <span class="choice-lives">${renderHeartsInline(op.lives)}</span>
+                </div>
+                <span class="badge">${op.score || 0} xal</span>
+              </div>
+            `).join("")
+          : `<div class="subtitle">Seçilə biləcək rəqib yoxdur</div>`;
+
+        document.getElementById("callDuelBtn").disabled = !canStart || !selectedOpponentId;
+
+        document.getElementById("myHeartsRow").innerHTML = renderHeartsInline(me.lives);
 
         const banner = document.getElementById("callBanner");
         if (room.callInfo && canStart) {
