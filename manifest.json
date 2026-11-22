@@ -8,5 +8,17 @@
   "short_name": "Hörümçək",
   "start_url": "/horumcek-toru/",
   "theme_color": "#ffffff",
-  "description": "Dairəvi tor və 4 suallıq kviz oyunu"
+  "description": "Dairəvi tor və 4 suallıq kviz",
+  "icons": [
+    {
+      "src": "/horumcek-toru/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/horumcek-toru/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
