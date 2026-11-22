@@ -130,10 +130,7 @@
       gap: 8px;
       flex-wrap: wrap;
     }
-    .choice-name {
-      font-weight: 700;
-      font-size: 13px;
-    }
+    .choice-name { font-weight: 700; font-size: 13px; }
     .choice-lives {
       display: flex;
       flex-direction: row;
@@ -382,14 +379,17 @@
         </div>
 
         <div class="card">
-          <div class="sec-title">Duelə Çağır (Alt-alta seçim)</div>
+          <div class="sec-title" id="roundSelectTitle">1-ci dövr · Rəqib Seç (Alt-alta)</div>
           <div class="open-select-list" id="openOpponentChoices"></div>
           <div class="select-footer-row">
-            <button class="btn" id="callDuelBtn" onclick="triggerCallDuel()">Duelə Çağır</button>
+            <div class="row">
+              <button class="btn" id="callDuelBtn" onclick="triggerCallDuel()">Duelə Çağır</button>
+              <button class="btn success sm" id="endFullGameBtn" onclick="finishFullTournament()">Tam Oyunu Bitir (Xal Səp)</button>
+            </div>
             <div class="hearts-row" id="myHeartsRow" title="Canlar"></div>
           </div>
           <div class="subtitle" style="margin-top:8px">
-            3 oyunçu: 3, 1, 0 · 4 oyunçu: 4, 2, 0, -1 · 5 oyunçu: 5, 3, 1, 0, -1
+            Baza: 100 sual (Asan / Orta / Çətin) · 3: 3,1,0 · 4: 4,2,0,-1 · 5: 5,3,1,0,-1
           </div>
         </div>
       </div>
@@ -400,10 +400,11 @@
       <div class="sec-title">Oyun Qaydaları</div>
       <div class="rules-list">
         <div class="rule-item"><b>Oyunçu sayı:</b> Oyunun başlaması üçün otaqda ən az <b>3</b> oyunçu olmalıdır (<b>3, 4 və ya 5</b> oyunçu ilə oynanılır). 3 nəfərdən az olduqda oyun başlamır.</div>
+        <div class="rule-item"><b>Dövrlər və yenidən seçim:</b> Bir dövr bitdikdən sonra növbəti dövr üçün yenidən rəqib seçilir. Xal hər dövrdə yox, <b>tam oyun bitəndə</b> səpələnir.</div>
         <div class="rule-item"><b>Tor və çağırış:</b> Yuxarıda oyunçular dairə ətrafında yerləşir, rəqib seçilib çağırılanda ikisini oxlu xətt birləşdirir və <i>"A duelə B-ni çağırdı"</i> bildirişi görünür, ardınca <b>5 - 4 - 3 - 2 - 1 Başladıq!</b> geri sayımı gedir.</div>
         <div class="rule-item"><b>3 can:</b> Hər oyunçunun yanında yan-yana düzülmüş <b>3 can (❤️❤️❤️)</b> var.</div>
         <div class="rule-item"><b>Sual pəncərəsi və vaxt:</b> Duel sualları yeni pəncərədə açılır, hər suala <b>25 saniyə</b> vaxt verilir. Hər iki iştirakçı cavab verəndə vaxt bitir və növbəti suala keçilir (<i>Duelin ilk sualı</i>, <i>Duelin ikinci sualı · Hesab A 1-1 B</i>, <i>Duelin üçüncü sualı · Hesab A 2-1 B</i>). Sual bitəndən sonra cavablar və düzgün cavab rəngli görünür.</div>
-        <div class="rule-item"><b>Xal qaydası:</b> Xal hər suala görə yox, <b>duelin sonunda yekun nəticəyə görə</b> verilir:
+        <div class="rule-item"><b>Yekun yerlər və xal qaydası:</b> Tam oyun bitəndə finalda qalib gələn <b>1-ci yer</b>, finalda uduzan <b>2-ci yer</b>, üçüncü uduzan <b>3-cü yer</b> olur və xal belə səpələnir:
           <br>• <b>3 oyunçu:</b> 3, 1, 0
           <br>• <b>4 oyunçu:</b> 4, 2, 0, -1
           <br>• <b>5 oyunçu:</b> 5, 3, 1, 0, -1
@@ -459,13 +460,13 @@
         <div class="timer-pill" id="modalTimer">25s</div>
       </div>
 
+      <div class="subtitle" id="modalLevelBadge" style="margin-bottom:6px">Səviyyə: Orta</div>
       <div class="q-text" id="modalQuestionText">Sual yüklənir...</div>
       <div class="ans-grid" id="modalOptionsGrid"></div>
       <div class="ans-review hidden" id="modalReviewBox"></div>
 
       <div class="row" style="margin-top:12px">
-        <button class="btn secondary sm" style="flex:1" onclick="simulateBotAnswer()">Rəqib cavab versin (test)</button>
-        <button class="btn success sm" style="flex:1" onclick="finishDuelSession()">Dueli Bitir</button>
+        <button class="btn success sm" style="flex:1" onclick="finishCurrentCycleAndNextRound()">Dövrü Bitir (Yeni Seçimə Keç)</button>
       </div>
     </div>
   </div>
@@ -474,15 +475,116 @@
 
   <script>
     const AVATARS = ["🕸️", "🦁", "🦅", "🐺", "🦊", "🐉"];
-    const STORAGE_KEY = "horumcek_toru_v8_state";
+    const STORAGE_KEY = "horumcek_toru_v10_state";
     const channel = ("BroadcastChannel" in window) ? new BroadcastChannel("horumcek_toru_channel") : null;
 
+    // 100 SUAL: Asan (1-34), Orta (35-67), Çətin (68-100)
     const QUESTIONS = [
-      { id: 1, q: "HTML-də ən böyük başlıq teqi hansıdır?", opts: ["<h1>", "<h6>", "<head>", "<title>"], ans: 0 },
-      { id: 2, q: "Azərbaycan Xalq Cümhuriyyəti nə vaxt qurulub?", opts: ["1918", "1920", "1991", "1905"], ans: 0 },
-      { id: 3, q: "2, 6, 12, 20, 30 ardıcıllığında növbəti ədəd?", opts: ["42", "36", "40", "48"], ans: 0 },
-      { id: 4, q: "'Balaca şahzadə' əsərinin müəllifi kimdir?", opts: ["Sent-Ekzüperi", "Aqata Kristi", "Corc Oruell", "Nizami"], ans: 0 },
-      { id: 5, q: "Python-da siyahıya element əlavə edən metod?", opts: ["append()", "push()", "add()", "insertAll()"], ans: 0 }
+      // ASAN (1-34)
+      { id: 1, lvl: "Asan", q: "Azərbaycanın paytaxtı hansı şəhərdir?", opts: ["Bakı", "Gəncə", "Şəki", "Quba"], ans: 0 },
+      { id: 2, lvl: "Asan", q: "Bir ildə neçə ay var?", opts: ["12", "10", "7", "24"], ans: 0 },
+      { id: 3, lvl: "Asan", q: "HTML nə üçün istifadə olunur?", opts: ["Veb səhifə quruluşu", "Şəkil çəkmək", "Səs yazmaq", "Video montaj"], ans: 0 },
+      { id: 4, lvl: "Asan", q: "2 + 2 × 2 ifadəsinin qiyməti neçədir?", opts: ["6", "8", "4", "10"], ans: 0 },
+      { id: 5, lvl: "Asan", q: "Azərbaycan Respublikasının dövlət dili hansıdır?", opts: ["Azərbaycan dili", "Türk dili", "İngilis dili", "Rus dili"], ans: 0 },
+      { id: 6, lvl: "Asan", q: "Həftənin 3-cü günü hansıdır?", opts: ["Çərşənbə", "Çərşənbə axşamı", "Cümə axşamı", "Bazar ertəsi"], ans: 0 },
+      { id: 7, lvl: "Asan", q: "Günəş sistemində bizə ən yaxın ulduz hansıdır?", opts: ["Günəş", "Sirius", "Mars", "Ay"], ans: 0 },
+      { id: 8, lvl: "Asan", q: "Kvadratın neçə tərəfi var?", opts: ["4", "3", "5", "6"], ans: 0 },
+      { id: 9, lvl: "Asan", q: "100 santimetr neçə metrdir?", opts: ["1 metr", "10 metr", "0.1 metr", "100 metr"], ans: 0 },
+      { id: 10, lvl: "Asan", q: "Suyun kimyəvi formulu hansıdır?", opts: ["H2O", "CO2", "O2", "NaCl"], ans: 0 },
+      { id: 11, lvl: "Asan", q: "Azərbaycanın üçrəngli bayrağında hansı rəng yoxdur?", opts: ["Sarı", "Mavi", "Qırmızı", "Yaşıl"], ans: 0 },
+      { id: 12, lvl: "Asan", q: "Kompüterdə mətn yazmaq üçün əsas giriş qurğusu hansıdır?", opts: ["Klaviatura", "Monitor", "Printer", "Kalonka"], ans: 0 },
+      { id: 13, lvl: "Asan", q: "15-dən 7 çıxdıqda neçə qalır?", opts: ["8", "9", "7", "6"], ans: 0 },
+      { id: 14, lvl: "Asan", q: "İlin ən soyuq fəsli hansıdır?", opts: ["Qış", "Yaz", "Yay", "Payız"], ans: 0 },
+      { id: 15, lvl: "Asan", q: "'Balaca şahzadə' əsərinin müəllifi kimdir?", opts: ["Antuan de Sent-Ekzüperi", "Aqata Kristi", "Nizami Gəncəvi", "Cəlil Məmmədquluzadə"], ans: 0 },
+      { id: 16, lvl: "Asan", q: "Üçbucağın daxili bucaqlarının cəmi neçə dərəcədir?", opts: ["180°", "90°", "360°", "270°"], ans: 0 },
+      { id: 17, lvl: "Asan", q: "Azərbaycanın ən böyük gölü hansıdır?", opts: ["Sarısu", "Göygöl", "Böyük Şor", "Ağgöl"], ans: 0 },
+      { id: 18, lvl: "Asan", q: "1 saat neçə dəqiqədir?", opts: ["60", "30", "100", "24"], ans: 0 },
+      { id: 19, lvl: "Asan", q: "Futbol komandasında meydanda neçə oyunçu olur?", opts: ["11", "9", "10", "7"], ans: 0 },
+      { id: 20, lvl: "Asan", q: "Rənglərdən hansı əsas spektr rəngidir?", opts: ["Mavi", "Çəhrayı", "Boz", "Qəhvəyi"], ans: 0 },
+      { id: 21, lvl: "Asan", q: "9 × 6 hasilini tapın.", opts: ["54", "45", "63", "56"], ans: 0 },
+      { id: 22, lvl: "Asan", q: "Xəzər dənizi nədir?", opts: ["Qapalı su hövzəsi", "Okean", "Çay", "Şəlalə"], ans: 0 },
+      { id: 23, lvl: "Asan", q: "HTML-də ən böyük başlıq teqi hansıdır?", opts: ["<h1>", "<h6>", "<p>", "<span>"], ans: 0 },
+      { id: 24, lvl: "Asan", q: "Yer kürəsinin təbii peyki hansıdır?", opts: ["Ay", "Mars", "Venera", "Yupiter"], ans: 0 },
+      { id: 25, lvl: "Asan", q: "81-in kvadrat kökü neçədir?", opts: ["9", "8", "7", "6"], ans: 0 },
+      { id: 26, lvl: "Asan", q: "Qubanın məşhur meyvəsi hansıdır?", opts: ["Alma", "Xurma", "İncir", "Zeytun"], ans: 0 },
+      { id: 27, lvl: "Asan", q: "1 kiloqram neçə qramdır?", opts: ["1000", "100", "10", "500"], ans: 0 },
+      { id: 28, lvl: "Asan", q: "Azərbaycanın valyutası nə adlanır?", opts: ["Manat", "Lirə", "Rubl", "Avro"], ans: 0 },
+      { id: 29, lvl: "Asan", q: "Günəş hansı tərəfdən çıxır?", opts: ["Şərqdən", "Qərbdən", "Şimaldan", "Cənubdan"], ans: 0 },
+      { id: 30, lvl: "Asan", q: "50-nin yarısı neçədir?", opts: ["25", "20", "30", "15"], ans: 0 },
+      { id: 31, lvl: "Asan", q: "Azərbaycanın qədim şəhərlərindən biri olan Şəki nə ilə tanınır?", opts: ["Şəki Xan Sarayı", "Qız Qalası", "İçərişəhər", "Atəşgah"], ans: 0 },
+      { id: 32, lvl: "Asan", q: "İki ədədin cəmi 20, fərqi 4-dür. Böyük ədəd hansıdır?", opts: ["12", "10", "8", "14"], ans: 0 },
+      { id: 33, lvl: "Asan", q: "Qış yuxusuna gedən heyvan hansıdır?", opts: ["Ayı", "Qartal", "Delfin", "Tülkü"], ans: 0 },
+      { id: 34, lvl: "Asan", q: "Səs ən sürətli harada yayılır?", opts: ["Bərk cisimdə", "Havada", "Vakuumda", "Qazda"], ans: 0 },
+
+      // ORTA (35-67)
+      { id: 35, lvl: "Orta", q: "Azərbaycan Xalq Cümhuriyyəti nə vaxt qurulub?", opts: ["28 may 1918", "28 aprel 1920", "18 oktyabr 1991", "12 noyabr 1995"], ans: 0 },
+      { id: 36, lvl: "Orta", q: "2, 6, 12, 20, 30 ardıcıllığında növbəti ədəd hansıdır?", opts: ["42", "36", "40", "48"], ans: 0 },
+      { id: 37, lvl: "Orta", q: "Python-da siyahının sonuna element əlavə edən metod hansıdır?", opts: ["append()", "push()", "insert()", "add()"], ans: 0 },
+      { id: 38, lvl: "Orta", q: "Dünyanın ən uzun çayı hansı hesab olunur?", opts: ["Nil", "Kür", "Amazon", "Dunay"], ans: 0 },
+      { id: 39, lvl: "Orta", q: "CSS-də mətn rəngini dəyişən xassə hansıdır?", opts: ["color", "text-style", "font-color", "bg-color"], ans: 0 },
+      { id: 40, lvl: "Orta", q: "Nizami Gəncəvinin 'Xəmsə'sinə daxil olan əsər hansıdır?", opts: ["Xosrov və Şirin", "Dədə Qorqud", "Koroğlu", "Aşıq Qərib"], ans: 0 },
+      { id: 41, lvl: "Orta", q: "Düzbucaqlının eni 6 sm, uzunluğu 9 sm-dir. Sahəsi nə qədərdir?", opts: ["54 sm²", "30 sm²", "15 sm²", "45 sm²"], ans: 0 },
+      { id: 42, lvl: "Orta", q: "İşığın vakuumdakı sürəti təxminən nə qədərdir?", opts: ["300 000 km/s", "150 000 km/s", "30 000 km/s", "340 m/s"], ans: 0 },
+      { id: 43, lvl: "Orta", q: "Kür çayı hansı su hövzəsinə tökülür?", opts: ["Xəzər dənizinə", "Qara dənizə", "Aralıq dənizinə", "Urmiya gölünə"], ans: 0 },
+      { id: 44, lvl: "Orta", q: "İkili say sistemində 5 ədədi necə yazılır?", opts: ["101", "110", "111", "100"], ans: 0 },
+      { id: 45, lvl: "Orta", q: "Dövlət Müstəqilliyi haqqında Konstitusiya Aktı nə vaxt qəbul edilib?", opts: ["18 oktyabr 1991", "28 may 1918", "18 may 1992", "9 noyabr 1990"], ans: 0 },
+      { id: 46, lvl: "Orta", q: "12 işçinin 6 günə gördüyü işi 4 işçi neçə günə görər?", opts: ["18 gün", "2 gün", "12 gün", "9 gün"], ans: 0 },
+      { id: 47, lvl: "Orta", q: "Azərbaycanın ən hündür zirvəsi hansıdır?", opts: ["Bazardüzü", "Şahdağ", "Kəpəz", "Tufandağ"], ans: 0 },
+      { id: 48, lvl: "Orta", q: "JavaScript-də dəyişən elan etmək üçün açar sözlərdən biri hansıdır?", opts: ["const", "define", "dim", "set"], ans: 0 },
+      { id: 49, lvl: "Orta", q: "Ağata Kristinin məşhur əsəri hansıdır?", opts: ["Şərq qatarında qətl", "Heyvanıstan", "Çərpələng uçuranlar", "Buratino"], ans: 0 },
+      { id: 50, lvl: "Orta", q: "18-in sadə vuruqlarının cəmi neçədir?", opts: ["5", "6", "9", "3"], ans: 0 },
+      { id: 51, lvl: "Orta", q: "Yerin öz oxu ətrafında tam dövrü nə qədər çəkir?", opts: ["Təxminən 24 saat", "365 gün", "27.3 gün", "12 saat"], ans: 0 },
+      { id: 52, lvl: "Orta", q: "SQL-də cədvəldən məlumat seçmək üçün hansı əmr işlədilir?", opts: ["SELECT", "FETCH", "PULL", "GET"], ans: 0 },
+      { id: 53, lvl: "Orta", q: "Üzeyir Hacıbəylinin ilk operası hansıdır?", opts: ["Leyli və Məcnun", "Arşın mal alan", "Koroğlu", "O olmasın, bu olsun"], ans: 0 },
+      { id: 54, lvl: "Orta", q: "3, 5, 9, 17, 33 ardıcıllığında növbəti ədəd hansıdır?", opts: ["65", "66", "50", "64"], ans: 0 },
+      { id: 55, lvl: "Orta", q: "1 kilobayt neçə baytdır (ikili sistemdə)?", opts: ["1024", "1000", "512", "2048"], ans: 0 },
+      { id: 56, lvl: "Orta", q: "Avropa ilə Asiyanı ayıran əsas dağ sistemlərindən biri hansıdır?", opts: ["Ural dağları", "Alp dağları", "And dağları", "Himalay dağları"], ans: 0 },
+      { id: 57, lvl: "Orta", q: "Tənliyi həll edin: 3x - 6 = 15. x neçədir?", opts: ["7", "3", "9", "5"], ans: 0 },
+      { id: 58, lvl: "Orta", q: "Qan dövranını kəşf edən alim kimdir?", opts: ["Uilyam Harvi", "İsaak Nyuton", "Qalileo Qaliley", "Nikola Tesla"], ans: 0 },
+      { id: 59, lvl: "Orta", q: "Git-də dəyişiklikləri yaddaşa salmaq üçün əmr hansıdır?", opts: ["git commit", "git push", "git clone", "git pull"], ans: 0 },
+      { id: 60, lvl: "Orta", q: "Xalid Hüseyninin məşhur romanı hansıdır?", opts: ["Çərpələng uçuranlar", "1984", "Səfillər", "Cinayət və cəza"], ans: 0 },
+      { id: 61, lvl: "Orta", q: "Dairənin radiusu 5 sm-dirsə, diametri neçə sm-dir?", opts: ["10 sm", "5 sm", "25 sm", "15 sm"], ans: 0 },
+      { id: 62, lvl: "Orta", q: "Fotosintez prosesi əsasən hüceyrənin hansı hissəsində gedir?", opts: ["Xloroplastda", "Mitoxondridə", "Ribosomda", "Nüvədə"], ans: 0 },
+      { id: 63, lvl: "Orta", q: "Azərbaycanın ən uzun çayı hansıdır?", opts: ["Kür", "Araz", "Samur", "Tərtər"], ans: 0 },
+      { id: 64, lvl: "Orta", q: "HTTP-də 404 kodu nəyi bildirir?", opts: ["Resurs tapılmadı", "Uğurlu sorğu", "Server xətası", "İcazə yoxdur"], ans: 0 },
+      { id: 65, lvl: "Orta", q: "40%-i 20 olan ədəd neçədir?", opts: ["50", "80", "60", "45"], ans: 0 },
+      { id: 66, lvl: "Orta", q: "Suyun normal atmosfer təzyiqində qaynama temperaturu neçədir?", opts: ["100°C", "0°C", "90°C", "120°C"], ans: 0 },
+      { id: 67, lvl: "Orta", q: "Corc Oruellin satirik əsəri hansıdır?", opts: ["Heyvanıstan", "Balaca şahzadə", "Buratino", "Ovod"], ans: 0 },
+
+      // ÇƏTİN (68-100)
+      { id: 68, lvl: "Çətin", q: "İkili axtarışın (Binary Search) ən pis halda zaman mürəkkəbliyi nədir?", opts: ["O(log n)", "O(n)", "O(n log n)", "O(1)"], ans: 0 },
+      { id: 69, lvl: "Çətin", q: "Gəncə qalası neçənci əsrdə inşa edilmişdir?", opts: ["XVI əsr", "XII əsr", "XIX əsr", "X əsr"], ans: 0 },
+      { id: 70, lvl: "Çətin", q: "x² - 5x + 6 = 0 tənliyinin köklərinin cəmi neçədir?", opts: ["5", "6", "-5", "-6"], ans: 0 },
+      { id: 71, lvl: "Çətin", q: "TCP və UDP protokolları OSI modelinin hansı səviyyəsində işləyir?", opts: ["Nəqliyyat (Transport)", "Şəbəkə (Network)", "Fiziki (Physical)", "Tətbiq (Application)"], ans: 0 },
+      { id: 72, lvl: "Çətin", q: "Cədvəl (Mendeleyev) sistemində 79-cu element hansıdır?", opts: ["Qızıl (Au)", "Gümüş (Ag)", "Platin (Pt)", "Civə (Hg)"], ans: 0 },
+      { id: 73, lvl: "Çətin", q: "Atropatena dövlətinin paytaxtı harada yerləşirdi?", opts: ["Qazaka (Qazançı)", "Qəbələ", "Bərdə", "Şamaxı"], ans: 0 },
+      { id: 74, lvl: "Çətin", q: "5! (5 faktorial) ədədinin qiyməti neçədir?", opts: ["120", "60", "24", "720"], ans: 0 },
+      { id: 75, lvl: "Çətin", q: "RSA şifrələmə alqoritmi hansı yanaşmaya əsaslanır?", opts: ["Asimmetrik açar və böyük ədədlərin vuruqlara ayrılması", "Simmetrik XOR", "Hash funksiyası", "Sezar sürüşdürməsi"], ans: 0 },
+      { id: 76, lvl: "Çətin", q: "Dünyanın ən dərin çökəkliyi olan Mariana çökəkliyi hansı okeandadır?", opts: ["Sakit okean", "Atlantik okean", "Hind okean", "Şimal Buzlu okean"], ans: 0 },
+      { id: 77, lvl: "Çətin", q: "Fibonakki ardıcıllığında 8-ci hədd (1, 1, 2, 3, 5, 8, 13, ...) neçədir?", opts: ["21", "13", "34", "18"], ans: 0 },
+      { id: 78, lvl: "Çətin", q: "Python-da tuple ilə list arasındakı əsas fərq nədir?", opts: ["Tuple dəyişməzdir (immutable)", "Tuple indeks dəstəkləmir", "List yalnız ədəd saxlayır", "Fərq yoxdur"], ans: 0 },
+      { id: 79, lvl: "Çətin", q: "Eldənizlər dövlətinin əsasını kim qoyub?", opts: ["Şəmsəddin Eldəniz", "Qızıl Arslan", "Əbu Bəkr", "Cahan Pəhləvan"], ans: 0 },
+      { id: 80, lvl: "Çətin", q: "log₂(64) ifadəsinin qiyməti neçədir?", opts: ["6", "8", "4", "32"], ans: 0 },
+      { id: 81, lvl: "Çətin", q: "Dijkstra alqoritmi qrafda nəyi tapmaq üçün istifadə olunur?", opts: ["Mənfi olmayan çəkili ən qısa yolu", "Minimum örtük ağacını", "Topoloji sıralamanı", "Güclü əlaqəli komponentləri"], ans: 0 },
+      { id: 82, lvl: "Çətin", q: "İşıq ilinin ölçü vahidi nədir?", opts: ["Məsafə", "Zaman", "Sürət", "Parlaqlıq"], ans: 0 },
+      { id: 83, lvl: "Çətin", q: "3 nəfərin bir-biri ilə əl görüşməsi (hər cütlük 1 dəfə) neçə görüşmə edir?", opts: ["3", "6", "2", "9"], ans: 0 },
+      { id: 84, lvl: "Çətin", q: "SQL-də 'ACID' xassələrində 'I' hərfi nəyi ifadə edir?", opts: ["Isolation (Təcrid olunma)", "Index", "Integrity", "Input"], ans: 0 },
+      { id: 85, lvl: "Çətin", q: "Nadir şah Əfşar tacqoyma mərasimi harada keçirilib?", opts: ["Muğan (Suqovuşan)", "Təbriz", "İsfahan", "Şiraz"], ans: 0 },
+      { id: 86, lvl: "Çətin", q: "Düzbucaqlı üçbucağın katetləri 6 və 8-dirsə, hipotenuzu neçədir?", opts: ["10", "12", "14", "9"], ans: 0 },
+      { id: 87, lvl: "Çətin", q: "Deadlock (kilitlənmə) yaranması üçün zəruri şərtlərdən biri hansıdır?", opts: ["Hold and Wait (Saxla və Gözlə)", "Cache Miss", "Page Fault", "Context Switch"], ans: 0 },
+      { id: 88, lvl: "Çətin", q: "Kainatda ən çox yayılmış kimyəvi element hansıdır?", opts: ["Hidrogen", "Helium", "Oksigen", "Karbon"], ans: 0 },
+      { id: 89, lvl: "Çətin", q: "Ehtimal: zər atıldıqda cüt rəqəm düşmə ehtimalı nə qədərdir?", opts: ["1/2", "1/3", "1/6", "2/3"], ans: 0 },
+      { id: 90, lvl: "Çətin", q: "DNS-də 'A' qeydi nəyi göstərir?", opts: ["Domeni IPv4 ünvanına bağlayır", "Poçt serverini", "Ad serverini", "Mətn qeydini"], ans: 0 },
+      { id: 91, lvl: "Çətin", q: "Şirvanşahlar dövlətinin paytaxtlarından biri olmuş şəhər hansıdır?", opts: ["Bakı", "Gəncə", "Naxçıvan", "Şuşa"], ans: 0 },
+      { id: 92, lvl: "Çətin", q: "sin(90°) qiyməti neçədir?", opts: ["1", "0", "-1", "0.5"], ans: 0 },
+      { id: 93, lvl: "Çətin", q: "Stack məlumat strukturunun iş prinsipi hansıdır?", opts: ["LIFO (Son giren ilk çıkar)", "FIFO", "Random Access", "Priority"], ans: 0 },
+      { id: 94, lvl: "Çətin", q: "Termodinamikanın birinci qanunu nəyin saxlanmasını ifadə edir?", opts: ["Enerjinin", "Entropiyanın", "Temperaturun", "Kütlənin"], ans: 0 },
+      { id: 95, lvl: "Çətin", q: "0-dan 9-a kimi rəqəmlərdən təkrarlanmadan 3 rəqəmli neçə ədəd düzəltmək olar?", opts: ["648", "720", "900", "504"], ans: 0 },
+      { id: 96, lvl: "Çətin", q: "TLS əl sıxışmasında (handshake) əsas məqsəd nədir?", opts: ["Şifrələnmiş bağlantı və identifikasiya qurmaq", "Fayl sıxmaq", "IP dəyişmək", "DNS keşləmək"], ans: 0 },
+      { id: 97, lvl: "Çətin", q: "Qafqaz Albaniyasının ilk məlum hökmdarı kim sayılır?", opts: ["Oroys", "Mömünə Xatun", "Babək", "Cavanşir"], ans: 0 },
+      { id: 98, lvl: "Çətin", q: "16-lıq say sistemində 'FF' ədədi 10-luq sistemdə neçədir?", opts: ["255", "256", "155", "128"], ans: 0 },
+      { id: 99, lvl: "Çətin", q: "Merkuri günəş ətrafında tam dövrü təxminən nə qədər müddətə vurur?", opts: ["88 Yer günü", "365 gün", "687 gün", "12 il"], ans: 0 },
+      { id: 100, lvl: "Çətin", q: "Ən kiçik sadə ədəd hansıdır?", opts: ["2", "1", "3", "0"], ans: 0 }
     ];
 
     const ORDINALS = ["ilk", "ikinci", "üçüncü", "dördüncü", "beşinci", "altıncı", "yeddinci", "səkkizinci"];
@@ -501,10 +603,7 @@
 
     const defaultState = {
       currentUserId: null,
-      users: [
-        { id: "u_bot1", nick: "nadir_tarix", email: "nadir@test.az", city: "Ucar", avatar: "🦅", score: 0, lives: 3 },
-        { id: "u_bot2", nick: "elmeddin_mnt", email: "elmeddin@test.az", city: "Bakı", avatar: "🦁", score: 0, lives: 3 }
-      ],
+      users: [],
       rooms: [
         {
           id: "101",
@@ -512,7 +611,11 @@
           type: "open",
           password: "",
           maxPlayers: 5,
-          players: ["u_bot1", "u_bot2"],
+          players: [],
+          cycleNumber: 1,
+          eliminatedOrder: [],
+          lastFinalWinnerId: null,
+          lastFinalLoserId: null,
           callInfo: null,
           duel: null
         }
@@ -552,7 +655,7 @@
       el.textContent = msg;
       el.style.display = "block";
       clearTimeout(el._t);
-      el._t = setTimeout(() => { el.style.display = "none"; }, 2400);
+      el._t = setTimeout(() => { el.style.display = "none"; }, 2500);
     }
 
     const getCurrentUser = () => state.users.find(u => u.id === state.currentUserId) || null;
@@ -596,6 +699,13 @@
       const u = { id: "u_" + Date.now(), nick, email, city, avatar: selectedAvatar, score: 0, lives: 3 };
       state.users.push(u);
       state.currentUserId = u.id;
+      if (!state.rooms.length) {
+        state.rooms.push({
+          id: "101", name: "Əsas Tor Otağı", type: "open", password: "",
+          maxPlayers: 5, players: [], cycleNumber: 1, eliminatedOrder: [],
+          lastFinalWinnerId: null, lastFinalLoserId: null, callInfo: null, duel: null
+        });
+      }
       state.rooms[0].players.push(u.id);
       saveState();
     }
@@ -623,7 +733,9 @@
       selectedOpponentId = null;
       state.rooms.push({
         id: String(Math.floor(100 + Math.random() * 900)),
-        name, type, password, maxPlayers: 5, players: [me.id], callInfo: null, duel: null
+        name, type, password, maxPlayers: 5, players: [me.id],
+        cycleNumber: 1, eliminatedOrder: [], lastFinalWinnerId: null, lastFinalLoserId: null,
+        callInfo: null, duel: null
       });
       saveState();
     }
@@ -690,8 +802,13 @@
       }, 650);
     }
 
+    function pickQuestionByRound(roundNum) {
+      const idx = Math.floor(Math.random() * QUESTIONS.length);
+      return QUESTIONS[(idx + (roundNum - 1)) % QUESTIONS.length];
+    }
+
     function openDuelQuestionModal(room, p1Id, p2Id) {
-      const q = QUESTIONS[Math.floor(Math.random() * QUESTIONS.length)];
+      const q = pickQuestionByRound(1);
       room.duel = {
         p1Id,
         p2Id,
@@ -733,18 +850,6 @@
       }
     }
 
-    function simulateBotAnswer() {
-      const room = getMyRoom();
-      if (!room?.duel || room.duel.finishedRound) return;
-      const oppId = room.duel.p1Id === state.currentUserId ? room.duel.p2Id : room.duel.p1Id;
-      if (room.duel.answers[oppId] === undefined) {
-        room.duel.answers[oppId] = Math.floor(Math.random() * 4);
-      }
-      const bothAnswered = room.duel.answers[room.duel.p1Id] !== undefined && room.duel.answers[room.duel.p2Id] !== undefined;
-      if (bothAnswered) resolveCurrentRound(room);
-      else saveState();
-    }
-
     function resolveCurrentRound(room) {
       clearInterval(questionInterval);
       const d = room.duel;
@@ -759,7 +864,7 @@
         const curRoom = getMyRoom();
         if (!curRoom?.duel) return;
         curRoom.duel.round++;
-        curRoom.duel.question = QUESTIONS[(curRoom.duel.round - 1) % QUESTIONS.length];
+        curRoom.duel.question = pickQuestionByRound(curRoom.duel.round);
         curRoom.duel.answers = {};
         curRoom.duel.timeLeft = 25;
         curRoom.duel.finishedRound = false;
@@ -768,13 +873,10 @@
       }, 2200);
     }
 
-    function finishDuelSession() {
+    function finishCurrentCycleAndNextRound() {
       clearInterval(questionInterval);
       const room = getMyRoom();
       if (!room?.duel) return;
-
-      const count = Math.min(5, Math.max(3, room.players.length));
-      const table = SCORE_TABLES[count] || SCORE_TABLES[3];
 
       const p1 = getUserById(room.duel.p1Id);
       const p2 = getUserById(room.duel.p2Id);
@@ -785,32 +887,61 @@
       if (s1 > s2) { winner = p1; loser = p2; }
       else if (s2 > s1) { winner = p2; loser = p1; }
 
-      if (loser) loser.lives = Math.max(0, (loser.lives ?? 3) - 1);
+      if (loser) {
+        loser.lives = Math.max(0, (loser.lives ?? 3) - 1);
+        room.eliminatedOrder = room.eliminatedOrder || [];
+        room.eliminatedOrder.push(loser.id);
+        room.lastFinalLoserId = loser.id;
+      }
+      if (winner) {
+        room.lastFinalWinnerId = winner.id;
+      }
 
-      const ranked = [...room.players]
-        .map(id => getUserById(id))
-        .filter(Boolean)
-        .sort((a, b) => {
-          const aWin = a.id === winner?.id ? 1 : 0;
-          const bWin = b.id === winner?.id ? 1 : 0;
-          const aLose = a.id === loser?.id ? -1 : 0;
-          const bLose = b.id === loser?.id ? -1 : 0;
-          return (bWin + bLose) - (aWin + aLose);
-        });
+      const endedCycle = room.cycleNumber || 1;
+      room.cycleNumber = endedCycle + 1;
+      room.duel = null;
+      room.callInfo = null;
+      selectedOpponentId = null;
+      saveState();
 
-      ranked.forEach((u, idx) => {
+      showToast(`${endedCycle}-ci dövr bitdi. Yeni dövr üçün rəqib seçin — xal oyun sonunda veriləcək.`);
+    }
+
+    function finishFullTournament() {
+      clearInterval(questionInterval);
+      const room = getMyRoom();
+      if (!room) return;
+      const count = Math.min(5, Math.max(3, room.players.length));
+      const table = SCORE_TABLES[count] || SCORE_TABLES[3];
+
+      const players = room.players.map(getUserById).filter(Boolean);
+      const firstId = room.lastFinalWinnerId || players[0]?.id;
+      const secondId = room.lastFinalLoserId || players[1]?.id;
+      const elim = [...(room.eliminatedOrder || [])].reverse();
+      const thirdId = elim.find(id => id !== firstId && id !== secondId) || players[2]?.id;
+
+      const orderedIds = [];
+      [firstId, secondId, thirdId, ...players.map(p => p.id)].forEach(id => {
+        if (id && !orderedIds.includes(id)) orderedIds.push(id);
+      });
+
+      orderedIds.forEach((uid, idx) => {
+        const u = getUserById(uid);
+        if (!u) return;
         const pts = table[idx] ?? 0;
         u.score = (u.score || 0) + pts;
       });
 
-      const endMsg = winner
-        ? `Duelin sonu: ${winner.nick} qalibdir · ${loser?.nick || "Rəqib"} can itirdi`
-        : "Duelin sonu: Heç-heçə";
-
       room.duel = null;
       room.callInfo = null;
+      room.cycleNumber = 1;
+      room.eliminatedOrder = [];
+      room.lastFinalWinnerId = null;
+      room.lastFinalLoserId = null;
+      players.forEach(p => { p.lives = 3; });
+
       saveState();
-      showToast(endMsg);
+      showToast(`Tam oyun bitdi! Xallar (${table.join(", ")}) səpələndi.`);
     }
 
     function sendFriendRequest() {
@@ -922,10 +1053,12 @@
       } else {
         const pCount = room.players.length;
         const canStart = pCount >= 3 && pCount <= 5;
-        document.getElementById("roomHeaderTitle").textContent = `${room.name} (#${room.id})`;
+        const cyc = room.cycleNumber || 1;
+        document.getElementById("roomHeaderTitle").textContent = `${room.name} (#${room.id}) · ${cyc}-ci dövr`;
         document.getElementById("roomHeaderMeta").textContent = `Oyunçu sayı: ${pCount}/5 (3–5 arası)`;
+        document.getElementById("roundSelectTitle").textContent = `${cyc}-ci dövr · Rəqib Seç (Alt-alta)`;
         document.getElementById("minPlayersNotice").textContent = canStart
-          ? `Oyunçu sayı uyğundur (${pCount} nəfər) — duelə çağıra bilərsiniz.`
+          ? `Oyunçu sayı uyğundur (${pCount} nəfər) — ${cyc}-ci dövr üçün rəqib seçib duelə çağıra bilərsiniz.`
           : `Oyunun başlaması üçün ən az 3 oyunçu lazımdır (hazırda ${pCount}).`;
 
         const opps = room.players.map(getUserById).filter(u => u && u.id !== me.id && (u.lives ?? 3) > 0);
@@ -947,6 +1080,7 @@
           : `<div class="subtitle">Seçilə biləcək rəqib yoxdur</div>`;
 
         document.getElementById("callDuelBtn").disabled = !canStart || !selectedOpponentId;
+        document.getElementById("endFullGameBtn").disabled = !canStart;
 
         document.getElementById("myHeartsRow").innerHTML = renderHeartsInline(me.lives);
 
@@ -972,6 +1106,7 @@
 
           document.getElementById("modalRoundHeader").textContent = `Duelin ${ord} sualı`;
           document.getElementById("modalScoreHeader").textContent = `Hesab: ${p1?.nick || "A"} ${d.score1}–${d.score2} ${p2?.nick || "B"}`;
+          document.getElementById("modalLevelBadge").textContent = `Səviyyə: ${d.question.lvl || "Orta"} · Sual #${d.question.id}`;
           document.getElementById("modalTimer").textContent = `${d.timeLeft}s`;
           document.getElementById("modalQuestionText").textContent = d.question.q;
 
