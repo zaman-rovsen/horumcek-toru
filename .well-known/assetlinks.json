@@ -1,1 +1,12 @@
-
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.zaman_rovsen.twa",
+      "sha256_cert_fingerprints": [
+        "5B:AC:EE:4B:14:4E:25:A1:1B:C7:EC:FC:A9:D3:34:6E:25:F5:D4:E6:EE:1F:4A:6B:26:DC:DB:65:64:2C:A0:2F"
+      ]
+    }
+  }
+]
